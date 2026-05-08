@@ -1,8 +1,9 @@
 // SA API Proxy - forwards requests to avoid CORS issues
-// The SA API at api-tiktok-dev.sourcesage.co doesn't return CORS headers,
+// The SA API at api-dhl-dev.sourcesage.co doesn't return CORS headers,
 // so browser requests fail. This serverless function proxies the calls.
+// Uses DHL endpoint with TikTok entity filter.
 
-const SA_API_BASE = 'https://api-tiktok-dev.sourcesage.co/api';
+const SA_API_BASE = 'https://api-dhl-dev.sourcesage.co/api';
 const SA_API_KEY = '3f03537cfb4c4ac089e50b08e4e0471f';
 const UPSTREAM_TIMEOUT_MS = 25000; // 25 second timeout for upstream API calls
 
