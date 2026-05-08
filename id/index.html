@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Missed Opportunities — TikTok Indonesia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300..700&family=Playfair+Display:wght@400..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    /* Loading states */
+    .loading-skeleton {
+      background: linear-gradient(90deg, rgba(148,163,184,0.1) 25%, rgba(148,163,184,0.2) 50%, rgba(148,163,184,0.1) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+      min-height: 24px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .api-status {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    .api-status.loading {
+      background: var(--amber);
+      color: #000;
+    }
+    .api-status.success {
+      background: var(--green-soft);
+      color: #000;
+    }
+    .api-status.error {
+      background: var(--red-soft);
+      color: #fff;
+    }
+    .data-source-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--teal);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+    .data-source-badge::before {
+      content: '●';
+      font-size: 8px;
+    }
+    .entity-list { margin-top: 16px; }
+    .entity-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .entity-name { font-size: 14px; color: var(--text-primary); }
+    .entity-metrics {
+      display: flex;
+      gap: 20px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+    .entity-metric { text-align: right; }
+    .entity-metric-label { color: var(--text-muted); font-size: 10px; }
+    .entity-metric-value { color: var(--text-primary); }
+  </style>
+</head>
+<body>
+  <div id="api-status" class="api-status loading" style="display: none;">Loading SA API data...</div>
+
+  <nav class="nav" id="nav"><div class="nav-inner"><a href="../index.html" class="nav-brand"><div class="nav-brand-icon">SS</div><span>SourceSage — Opportunity Intelligence</span></a><div style="display:flex;align-items:center;gap:16px;"><a href="../index.html" class="nav-back">← All countries</a><div class="nav-tag">TikTok Indonesia</div></div></div></nav>
+
+  <section class="hero"><div class="hero-grid"></div><div class="container hero-content">
+    <div class="hero-eyebrow reveal">Country Analysis — TikTok Indonesia <span class="data-source-badge">Live SA API</span></div>
+    <h1 class="hero-title reveal reveal-delay-1">Missed <em>Opportunities</em><br>with TikTok Indonesia</h1>
+    <p class="hero-description reveal reveal-delay-2">Real-time data from SourceSage Aggregator API. Dashboard shows live metrics for TikTok Indonesia entities including orders, spend, and cost saving analysis.</p>
+    <div class="hero-stats reveal reveal-delay-3" id="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-value" id="stat-total-orders">--</div><div class="hero-stat-label">Total Orders (POs)</div></div>
+      <div class="hero-stat"><div class="hero-stat-value teal" id="stat-total-spend">--</div><div class="hero-stat-label">Total Spend</div></div>
+      <div class="hero-stat"><div class="hero-stat-value amber" id="stat-total-saving">--</div><div class="cost-saving-period-note">Jul–Dec 2025 only</div><div class="hero-stat-label">Total Cost Saving</div></div>
+      <div class="hero-stat"><div class="hero-stat-value red" id="stat-entity-count">--</div><div class="hero-stat-label">TikTok Entities</div></div>
+    </div>
+    <div class="disclaimer-banner reveal reveal-delay-4" style="max-width:900px;margin-top:24px;"><div class="icon">📡</div><p><strong>Live Data Source.</strong> Metrics are fetched in real-time from the SourceSage Aggregator API (SA API). Data reflects actual TikTok Indonesia procurement activity for 2025.</p></div>
+  </div><div class="scroll-indicator"><span>Scroll</span><div class="scroll-arrow"></div></div></section>
+
+  <!-- ENTITY BREAKDOWN SECTION -->
+  <section class="section" style="background:var(--bg-primary);border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="section-label reveal">Entity Breakdown</div>
+      <h2 class="section-title reveal reveal-delay-1">TikTok Indonesia Entities</h2>
+      <p class="section-subtitle reveal reveal-delay-2">Individual entity performance metrics from SA API order-analysis endpoint.</p>
+      <div class="reveal reveal-delay-3" style="margin-top:40px;">
+        <div id="entity-loading" class="loading-skeleton" style="height: 200px;"></div>
+        <div id="entity-list" class="entity-list" style="display: none;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY ANALYSIS SECTION -->
+  <section class="section" style="background:var(--bg-deep);border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="section-label reveal">Category Analysis</div>
+      <h2 class="section-title reveal reveal-delay-1">Order Analysis by Category</h2>
+      <p class="section-subtitle reveal reveal-delay-2">Category spend breakdown from SA API order-analysis endpoint for TikTok entity group.</p>
+      <div class="reveal reveal-delay-3" style="margin-top:40px;">
+        <div id="category-loading" class="loading-skeleton" style="height: 300px;"></div>
+        <div id="category-grid" style="display: none; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEY METRICS SECTION -->
+  <section class="section" style="background:var(--bg-primary);border-top:1px solid var(--border);"><div class="container">
+    <div class="section-label reveal">Key Metrics</div>
+    <h2 class="section-title reveal reveal-delay-1">2025 Performance Summary</h2>
+    <p class="section-subtitle reveal reveal-delay-2">Aggregated metrics from SA API order-analysis endpoint.</p>
+    <div class="insights-grid">
+      <div class="insight-card observed reveal reveal-delay-1"><div class="insight-icon teal">📊</div><div class="insight-label">Total Spend</div><div class="insight-value teal" id="metric-total-spend">--</div><div class="insight-note">Sum of all TikTok entity spend in SGD</div></div>
+      <div class="insight-card potential reveal reveal-delay-2"><div class="insight-icon amber">💰</div><div class="insight-label">Total Cost Saving</div><div class="insight-value amber" id="metric-total-saving">--</div><div class="insight-note">Cost saving data covers Jul–Dec 2025 only</div></div>
+      <div class="insight-card gap reveal reveal-delay-3"><div class="insight-icon red">🧾</div><div class="insight-label">Total Orders</div><div class="insight-value red" id="metric-total-orders">--</div><div class="insight-note">Purchase order count from entity data</div></div>
+    </div>
+  </div></section>
+
+  <!-- CATEGORY TABLE SECTION -->
+  <section class="section heatmap"><div class="container">
+    <div class="section-label reveal">Detailed View</div>
+    <h2 class="section-title reveal reveal-delay-1">Category Spend Breakdown</h2>
+    <div style="overflow-x:auto;">
+      <table class="heatmap-table reveal reveal-delay-3">
+        <thead><tr><th style="width:24px">#</th><th>Category</th><th style="text-align:right">Spend (SGD)</th><th style="text-align:right">Orders</th><th style="text-align:right">Margin (SGD)</th></tr></thead>
+        <tbody id="category-tbody"><tr><td colspan="5" style="text-align:center;padding:40px;">Loading category data from SA API...</td></tr></tbody>
+      </table>
+    </div>
+  </div></section>
+
+  <section class="section story"><div class="container"><div class="story-content">
+    <div class="story-text reveal">
+      <div class="section-label">Executive Read</div>
+      <h2 class="section-title">What the data suggests</h2>
+      <p>The dashboard shows live data from the SourceSage Aggregator API for TikTok Indonesia entities. The metrics reflect actual procurement activity including orders, spend, and cost savings across all TikTok entities in the Indonesia region.</p>
+      <p>Use this data to identify opportunities for cost optimization, vendor consolidation, and strategic procurement decisions.</p>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div class="story-highlight"><div class="story-highlight-number" id="summary-entity-count">--</div><div class="story-highlight-text">Active TikTok entities tracked in Indonesia region via SA API.</div></div>
+      <div class="disclaimer-banner" style="margin-top:20px;"><div class="icon">🧭</div><p><strong>Data Source.</strong> All metrics are fetched live from the SourceSage Aggregator API. Data is refreshed on each page load.</p></div>
+    </div>
+  </div></div></section>
+
+  <section class="cta"><div class="container"><div class="reveal">
+    <div class="section-label" style="justify-content:center;">Bottom Line</div>
+    <h2 class="cta-title">TikTok Indonesia <em>Procurement Intelligence</em></h2>
+    <p class="cta-text">Real-time visibility into TikTok Indonesia procurement activity through the SourceSage Aggregator API.</p>
+    <div class="cta-amount" id="cta-total-spend">--</div>
+    <div class="cta-amount-label">Total 2025 Spend (SGD)</div>
+  </div></div></section>
+
+  <footer class="footer"><div class="container">
+    <div class="footer-text">SourceSage Opportunity Intelligence · TikTok Indonesia Analysis</div>
+    <div class="footer-divider"></div>
+    <div class="footer-text" style="font-size:11px;">Data sourced from SourceSage Aggregator API · Live metrics · Confidential</div>
+  </div></footer>
+
+  <script src="../sa-api-client.js"></script>
+  <script src="../convex-client.js"></script>
+  <script src="../shared.js"></script>
+  <script>
+    // Format currency
+    function formatSGD(value) {
+      if (value === null || value === undefined || isNaN(value)) return '--';
+      return 'SGD ' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function formatNumber(value) {
+      if (value === null || value === undefined || isNaN(value)) return '--';
+      return value.toLocaleString('en-US');
+    }
+
+    function formatCostSavingSGD(value) {
+      const amount = Number(value || 0);
+      if (!Number.isFinite(amount)) return '--';
+      return 'SGD ' + amount.toLocaleString('en-SG', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+
+    async function fetchCostSavingValue(regionCode) {
+      const response = await fetch(`../api/cost-saving-proxy?region=${regionCode}&entity_name=TikTok`);
+      if (!response.ok) throw new Error(`Cost Saving API error: ${response.status}`);
+      const payload = await response.json();
+      return payload.totalSaving ?? payload.totalSavingSgd ?? 0;
+    }
+
+    function updateCostSavingDisplay(totalSaving) {
+      const formatted = formatCostSavingSGD(totalSaving);
+      const heroSavingEl = document.getElementById('stat-total-saving');
+      const metricSavingEl = document.getElementById('metric-total-saving');
+      if (heroSavingEl) heroSavingEl.textContent = formatted;
+      if (metricSavingEl) metricSavingEl.textContent = formatted;
+    }
+
+    // Initialize dashboard
+    async function initDashboard() {
+      const statusEl = document.getElementById('api-status');
+      statusEl.style.display = 'block';
+      statusEl.className = 'api-status loading';
+      statusEl.textContent = 'Loading SA API data...';
+
+      try {
+        console.log('[ID Dashboard] Starting data fetch...');
+        const processor = new DashboardDataProcessor('ID');
+        const data = await processor.fetchAllMetrics('2025');
+        console.log('[ID Dashboard] Data received:', data);
+
+        // Skip UI updates if demo data is returned
+        console.log('[ID Dashboard] Checking _isDemoData:', data._isDemoData);
+        if (data._isDemoData) {
+          console.warn('[ID Dashboard] Demo data detected, keeping placeholders');
+          statusEl.className = 'api-status error';
+          statusEl.textContent = '✗ Demo data - keeping placeholders';
+          setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
+          return;
+        }
+        console.log('[ID Dashboard] Data is valid, updating UI...');
+
+        console.log('[ID Dashboard] orderAnalysis:', data.orderAnalysis);
+        console.log('[ID Dashboard] _isDemoData:', data._isDemoData);
+        console.log('[ID Dashboard] _isEmpty:', data._isEmpty);
+
+        // Update hero stats - using orderAnalysis data only
+        document.getElementById('stat-total-orders').textContent = formatNumber(data.orderAnalysis.totalOrders);
+        document.getElementById('stat-total-spend').textContent = formatSGD(data.orderAnalysis.totalSpend);
+        
+        // Entity count now available from orderAnalysis entityCount
+        document.getElementById('stat-entity-count').textContent = formatNumber(data.orderAnalysis.entityCount);
+
+        // Update key metrics section
+        document.getElementById('metric-total-spend').textContent = formatSGD(data.orderAnalysis.totalSpend);
+        document.getElementById('metric-total-orders').textContent = formatNumber(data.orderAnalysis.totalOrders);
+
+        // Update CTA
+        document.getElementById('cta-total-spend').textContent = formatSGD(data.orderAnalysis.totalSpend);
+        document.getElementById('summary-entity-count').textContent = formatNumber(data.orderAnalysis.entityCount);
+
+        // Render category breakdown
+        renderCategoryGrid(data.orderAnalysis.categories);
+        renderCategoryTable(data.orderAnalysis.categories);
+        
+        // Render entity breakdown
+        renderEntityList(data.orderAnalysis.entities);
+
+        // Update status
+        statusEl.className = 'api-status success';
+        statusEl.textContent = '✓ Live SA API data loaded';
+        setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
+
+      } catch (error) {
+        console.error('[ID Dashboard] Dashboard initialization failed:', error);
+        statusEl.className = 'api-status error';
+        statusEl.textContent = '✗ API Error - Check console';
+      }
+    }
+
+    function renderCategoryGrid(categories) {
+      const loadingEl = document.getElementById('category-loading');
+      const gridEl = document.getElementById('category-grid');
+      loadingEl.style.display = 'none';
+      gridEl.style.display = 'grid';
+      if (!categories || categories.length === 0) {
+        gridEl.innerHTML = '<p style="color:var(--text-muted);">No category data available.</p>';
+        return;
+      }
+      const sortedCategories = [...categories].sort((a, b) => b.spend - a.spend);
+      gridEl.innerHTML = sortedCategories.map(cat => `
+        <article class="insight-card" style="min-height:168px;">
+          <div class="insight-icon teal">🏷️</div>
+          <div class="insight-label">${cat.name}</div>
+          <div class="insight-value teal">${formatSGD(cat.spend)}</div>
+          <div class="insight-note">${formatNumber(cat.orders)} orders · Margin: ${formatSGD(cat.margin)}</div>
+        </article>
+      `).join('');
+    }
+
+    function renderCategoryTable(categories) {
+      const tbody = document.getElementById('category-tbody');
+      if (!categories || categories.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;">No category data available.</td></tr>';
+        return;
+      }
+      const sortedCategories = [...categories].sort((a, b) => b.spend - a.spend);
+      tbody.innerHTML = sortedCategories.map((cat, i) => `
+        <tr>
+          <td style="color:var(--text-muted);font-family:var(--font-mono);font-size:12px;">${i + 1}</td>
+          <td class="cat-name">${cat.name}</td>
+          <td class="cat-observed" style="text-align:right">${formatSGD(cat.spend)}</td>
+          <td class="cat-potential" style="text-align:right">${formatNumber(cat.orders)}</td>
+          <td class="cat-gap" style="text-align:right">${formatSGD(cat.margin)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderEntityList(entities) {
+      const loadingEl = document.getElementById('entity-loading');
+      const listEl = document.getElementById('entity-list');
+      loadingEl.style.display = 'none';
+      listEl.style.display = 'block';
+      if (!entities || entities.length === 0) {
+        listEl.innerHTML = '<p style="color:var(--text-muted);">No entity data available.</p>';
+        return;
+      }
+      const sortedEntities = [...entities].sort((a, b) => b.spend - a.spend);
+      listEl.innerHTML = sortedEntities.map(entity => `
+        <div class="entity-item">
+          <div class="entity-name">${entity.name}</div>
+          <div class="entity-metrics">
+            <div class="entity-metric">
+              <div class="entity-metric-label">Spend</div>
+              <div class="entity-metric-value">${formatSGD(entity.spend)}</div>
+            </div>
+            <div class="entity-metric">
+              <div class="entity-metric-label">Orders</div>
+              <div class="entity-metric-value">${formatNumber(entity.orders)}</div>
+            </div>
+            <div class="entity-metric">
+              <div class="entity-metric-label">Margin</div>
+              <div class="entity-metric-value">${formatSGD(entity.margin)}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', async () => {
+      console.log('[ID Dashboard] DOMContentLoaded fired');
+      
+      // Fire cost-saving API independently (not blocked by SA data)
+      fetchCostSavingValue('ID').catch(err => {
+        console.warn('[ID Dashboard] Cost Saving API failed:', err.message);
+      }).then(totalSaving => {
+        if (totalSaving !== null && totalSaving !== undefined) updateCostSavingDisplay(totalSaving);
+      });
+      
+      initDashboard().catch(err => {
+        console.error('[ID Dashboard] initDashboard failed:', err);
+      });
+      initAll();
+    });
+  </script>
+</body></html>

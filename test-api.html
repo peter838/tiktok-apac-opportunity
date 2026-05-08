@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API Test</title>
+</head>
+<body>
+  <h1>API Test</h1>
+  <div id="status">Testing...</div>
+  <div id="result"></div>
+
+  <script src="sa-api-client.js"></script>
+  <script>
+    async function test() {
+      try {
+        const statusEl = document.getElementById('status');
+        const resultEl = document.getElementById('result');
+
+        statusEl.textContent = 'Fetching data...';
+        
+        // Test direct proxy call
+        const response = await fetch('/api/sa-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            endpoint: '/v1.0/agent/analytics/tracking/entity-margin',
+            payload: { from_date: '2025-01-01', to_date: '2025-12-31', region: 'SG', page: 1, per_page: 100 }
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (Array.isArray(data)) {
+          const tiktok = data.filter(e => e.entity_group === 'TikTok' || (e.entity_name && e.entity_name.toUpperCase().includes('TikTok')));
+          const totalMargin = tiktok.reduce((sum, e) => sum + (parseFloat(e.margin) || 0), 0);
+          
+          resultEl.innerHTML = `
+            <p>✓ API works!</p>
+            <p>Total entities: ${data.length}</p>
+            <p>TikTok entities: ${tiktok.length}</p>
+            <p>Total margin: ${totalMargin.toFixed(2)}</p>
+          `;
+        } else {
+          resultEl.innerHTML = `<p>✗ Unexpected response: ${JSON.stringify(data)}</p>`;
+        }
+        
+        statusEl.textContent = 'Done';
+      } catch (error) {
+        document.getElementById('status').textContent = 'Error: ' + error.message;
+        console.error(error);
+      }
+    }
+
+    test();
+  </script>
+</body>
+</html>

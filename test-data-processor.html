@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Processor Test</title>
+</head>
+<body>
+  <h1>Data Processor Test</h1>
+  <div id="status">Testing...</div>
+  <div id="result"></div>
+
+  <script src="sa-api-client.js"></script>
+  <script>
+    async function test() {
+      try {
+        const statusEl = document.getElementById('status');
+        const resultEl = document.getElementById('result');
+
+        statusEl.textContent = 'Fetching data...';
+        
+        const processor = new DashboardDataProcessor('SG');
+        const data = await processor.fetchAllMetrics('2025');
+        
+        resultEl.innerHTML = `
+          <h2>Raw Data</h2>
+          <p>_isDemoData: ${data._isDemoData}</p>
+          <p>_isEmpty: ${data._isEmpty}</p>
+          <h2>Entity Margin</h2>
+          <p>totalOrders: ${data.entityMargin?.totalOrders}</p>
+          <p>totalMargin: ${data.entityMargin?.totalMargin}</p>
+          <p>totalSpend: ${data.entityMargin?.totalSpend}</p>
+          <p>entityCount: ${data.entityMargin?.entityCount}</p>
+          <p>entities.length: ${data.entityMargin?.entities?.length}</p>
+          <h2>Order Analysis</h2>
+          <p>totalSpend: ${data.orderAnalysis?.totalSpend}</p>
+          <p>categoryCount: ${data.orderAnalysis?.categoryCount}</p>
+          <p>categories.length: ${data.orderAnalysis?.categories?.length}</p>
+          <h2>Raw API Responses</h2>
+          <pre>${JSON.stringify(data.raw, null, 2).substring(0, 2000)}...</pre>
+        `;
+        
+        statusEl.textContent = 'Done';
+      } catch (error) {
+        document.getElementById('status').textContent = 'Error: ' + error.message;
+        console.error(error);
+      }
+    }
+
+    test();
+  </script>
+</body>
+</html>

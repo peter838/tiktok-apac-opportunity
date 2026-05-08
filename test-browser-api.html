@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Browser API Test</title>
+</head>
+<body>
+  <h1>Browser API Test</h1>
+  <div id="results" style="font-family: monospace; white-space: pre-wrap;"></div>
+  
+  <script src="sa-api-client.js"></script>
+  <script>
+    async function testAPI() {
+      const results = document.getElementById('results');
+      const client = new SAAPIClient();
+      
+      results.textContent = 'Testing API...\n\n';
+      
+      try {
+        // Test CN order-analysis
+        results.textContent += 'Testing CN order-analysis...\n';
+        const orderResponse = await client.makeRequest('/v1.0/agent/analytics/entity/order-analysis', {
+          from_date: '2023-01-01',
+          to_date: '2025-12-31',
+          entity_group: 'TikTok',
+          region: 'CN'
+        });
+        
+        results.textContent += 'Response type: ' + typeof orderResponse + '\n';
+        results.textContent += 'Has items: ' + (orderResponse && 'items' in orderResponse) + '\n';
+        results.textContent += 'Items length: ' + (orderResponse?.items?.length || 0) + '\n';
+        results.textContent += 'First item: ' + JSON.stringify(orderResponse?.items?.[0]) + '\n\n';
+        
+        // Calculate spend
+        const orderRows = orderResponse?.items || [];
+        const actualSpend = orderRows
+          .filter(row => row.entity_group === 'TikTok')
+          .reduce((sum, row) => sum + (parseFloat(row.order_value) || 0), 0);
+        results.textContent += 'Calculated CN spend: S$ ' + actualSpend.toLocaleString() + '\n\n';
+        
+        // Test CN entity-margin
+        results.textContent += 'Testing CN entity-margin...\n';
+        const marginResponse = await client.makeRequest('/v1.0/agent/analytics/tracking/entity-margin', {
+          from_date: '2023-01-01',
+          to_date: '2025-12-31',
+          entity_group: 'TikTok',
+          region: 'CN'
+        });
+        
+        results.textContent += 'Response type: ' + typeof marginResponse + '\n';
+        results.textContent += 'Is array: ' + Array.isArray(marginResponse) + '\n';
+        results.textContent += 'Length: ' + (marginResponse?.length || marginResponse?.data?.length || 0) + '\n';
+        results.textContent += 'First item: ' + JSON.stringify(marginResponse?.[0] || marginResponse?.data?.[0]) + '\n\n';
+        
+        // Calculate PO count
+        const marginRows = Array.isArray(marginResponse) ? marginResponse : (marginResponse?.data || []);
+        const poCount = marginRows
+          .filter(row => row.entity_group === 'TikTok')
+          .reduce((sum, row) => sum + (parseInt(row.count_order) || 0), 0);
+        results.textContent += 'Calculated CN PO count: ' + poCount.toLocaleString() + '\n';
+        
+      } catch (error) {
+        results.textContent += '\nERROR: ' + error.message + '\n';
+        results.textContent += 'Stack: ' + error.stack + '\n';
+      }
+    }
+    
+    testAPI();
+  </script>
+</body>
+</html>

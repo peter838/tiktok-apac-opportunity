@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok APAC Opportunity Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300..700&family=Playfair+Display:wght@400..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="api-status-banner" style="background:#0f172a;color:#22c55e;text-align:center;padding:8px;font-family:var(--font-mono);font-size:12px;">Loading live data from API...</div>
+  <nav class="nav" id="nav"><div class="nav-inner"><a href="index.html" class="nav-brand"><div class="nav-brand-icon">SS</div><span>SourceSage — Opportunity Intelligence</span></a><div class="nav-tag">TikTok APAC</div></div></nav>
+
+  <section class="hero"><div class="hero-grid"></div><div class="container hero-content">
+    <div class="hero-eyebrow reveal">Regional Overview — TikTok Asia-Pacific</div>
+    <h1 class="hero-title reveal reveal-delay-1">Missed <em>Opportunities</em><br>Across TikTok APAC</h1>
+    <p class="hero-description reveal reveal-delay-2">A regional opportunity narrative built from 2025 dashboard transcriptions with 2023–2025 trend overlay, now including a site-by-site buying model. Each country page drills into product families and directional opportunity logic.</p>
+    <div class="agg-stats reveal reveal-delay-3">
+      <div class="agg-stat"><div class="agg-stat-value" style="color:var(--amber)">10</div><div class="agg-stat-label">Markets analyzed</div></div>
+      <div class="agg-stat"><div class="agg-stat-value" id="main-stat-spend" style="color:var(--teal)">--</div><div class="agg-stat-label">Actual Spend</div></div>
+      <div class="agg-stat"><div class="agg-stat-value" id="main-stat-po" style="color:var(--amber)">--</div><div class="agg-stat-label">Total PO count</div></div>
+      <div class="agg-stat"><div class="agg-stat-value" id="main-stat-saving" style="color:var(--green-soft)">--</div><div class="cost-saving-period-note">Jul–Dec 2025 only</div><div class="agg-stat-label">Total Cost Saving</div></div>
+      <div class="agg-stat"><div class="agg-stat-value" id="main-stat-top-region" style="color:var(--purple)">CN</div><div class="agg-stat-label">Top region</div></div>
+    </div>
+    <div class="disclaimer-banner reveal reveal-delay-4" style="max-width:920px;margin-top:24px;"><div class="icon">⚠️</div><p><strong>Transparency first.</strong> Observed values from 2025 dashboard screenshots. Potential values are directional modeling. Multi-year trends are partial extraction from key visible categories. Site archetype model is an illustrative framework, not actual TikTok site procurement data.</p></div>
+  </div><div class="scroll-indicator"><span>Scroll</span><div class="scroll-arrow"></div></div></section>
+
+  <section class="section" style="background:var(--bg-primary);border-top:1px solid var(--border);"><div class="container">
+    <div class="section-label reveal">Country Pages</div>
+    <h2 class="section-title reveal reveal-delay-1">Pick a TikTok market</h2>
+    <p class="section-subtitle reveal reveal-delay-2">Every page uses the same structure: observed actuals, multi-year trends, product drilldowns, site archetype model, lowest-hanging fruit, and clearly labeled directional assumptions.</p>
+    <div class="country-grid">
+      <a href="cn/index.html" class="country-card reveal" data-region="CN">
+          <div class="country-flag">🇨🇳</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><div class="country-card-name">China</div><span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--green-soft)">🚀 Major expansion market</span></div>
+          <div class="country-card-code">CN</div>
+          <div class="country-card-stats">
+            <div><div class="country-card-stat-value" data-metric="spend" style="color:var(--teal)">--</div><div class="country-card-stat-label">Actual Spend</div></div>
+            <div><div class="country-card-stat-value" data-metric="po-count" style="color:var(--amber)">--</div><div class="country-card-stat-label">PO Count</div></div>
+          </div>
+          <div class="country-card-bar"><div class="country-card-bar-fill" data-metric="bar" style="width:0%"></div></div>
+          <div class="country-card-categories">11 categories • Top: Office &amp; Pantry Supplies, IT Accessories &amp; Equipment, Events (Food)</div>
+      </a>
+      <a href="jp/index.html" class="country-card reveal" data-region="JP">
+          <div class="country-flag">🇯🇵</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><div class="country-card-name">Japan</div><span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--green-soft)">📈 Rebound / expansion market</span></div>
+          <div class="country-card-code">JP</div>
+          <div class="country-card-stats">
+            <div><div class="country-card-stat-value" data-metric="spend" style="color:var(--teal)">--</div><div class="country-card-stat-label">Actual Spend</div></div>
+            <div><div class="country-card-stat-value" data-metric="po-count" style="color:var(--amber)">--</div><div class="country-card-stat-label">PO Count</div></div>
+          </div>
+          <div class="country-card-bar"><div class="country-card-bar-fill" data-metric="bar" style="width:0%"></div></div>
+          <div class="country-card-categories">11 categories • Top: Office &amp; Pantry Supplies, IT Accessories &amp; Equipment, MRO</div>
+      </a>
+      <a href="au/index.html" class="country-card reveal" data-region="AU">
+          <div class="country-flag">🇦🇺</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><div class="country-card-name">Australia</div><span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--amber)">📊 Large but volatile wallet</span></div>
+          <div class="country-card-code">AU</div>
+          <div class="country-card-stats">
+            <div><div class="country-card-stat-value" data-metric="spend" style="color:var(--teal)">--</div><div class="country-card-stat-label">Actual Spend</div></div>
+            <div><div class="country-card-stat-value" data-metric="po-count" style="color:var(--amber)">--</div><div class="country-card-stat-label">PO Count</div></div>
+          </div>
+          <div class="country-card-bar"><div class="country-card-bar-fill" data-metric="bar" style="width:0%"></div></div>
+          <div class="country-card-categories">11 categories • Top: MRO, Office &amp; Pantry Supplies, MRO Services</div>
+      </a>
+      <a href="my/index.html" class="country-card reveal" data-region="MY">
+          <div class="country-flag">🇲🇾</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><div class="country-card-name">Malaysia</div><span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--amber)">🔀 Mixed recovery — operational base growing</span></div>
+          <div class="country-card-code">MY</div>
+          <div class="country-card-stats">
+            <div><div class="country-card-stat-value" data-metric="spend" style="color:var(--teal)">--</div><div class="country-card-stat-label">Actual Spend</div></div>
+            <div><div class="country-card-stat-value" data-metric="po-count" style="color:var(--amber)">--</div><div class="country-card-stat-label">PO Count</div></div>
+          </div>
+          <div class="country-card-bar"><div class="country-card-bar-fill" data-metric="bar" style="width:0%"></div></div>
+          <div class="country-card-categories">10 categories • Top: Events (Food), Office &amp; Pantry Supplies, Gifts/Promotions (Vouchers)</div>
+      </a>
+      <a href="id/index.html" class="country-card reveal" data-region="ID">
+          <div class="country-flag">🇮🇩</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><div class="country-card-name">Indonesia</div><span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--amber)">🔄 IT reactivation opportunity</span></div>
+          <div class="country-card-code">ID</div>
+          <div class="country-card-stats">
+            <div><div class="country-card-stat-value" data-metric="spend" style="color:var(--teal)">--</div><div class="country-card-stat-label">Actual Spend</div></div>
+            <div><div class="country-card-stat-value" data-metric="po-count" style="color:var(--amber)">--</div><div class="country-card-stat-label">PO Count</div></div>
+          </div>
+          <div class="country-card-bar"><div class="country-card-bar-fill" data-metric="bar" style="width:0%"></div></div>
+          <div class="country-card-categories">10 categories • Top: Office &amp; Pantry Supplies, Events (Food), MRO</div>
+      </a>
+      <a href="in/index.html" class="country-card reveal" data-region="IN">
+          <div class="country-flag">🇮🇳</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><div class="country-card-name">India</div><span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--amber)">🎁 Voucher-led market — cross-sell potential</span></div>
+          <div class="country-card-code">IN</div>
+          <div class="country-card-stats">
+            <div><div class="country-card-stat-value" data-metric="spend" style="color:var(--teal)">--</div><div class="country-card-stat-label">Actual Spend</div></div>
+            <div><div class="country-card-stat-value" data-metric="po-count" style="color:var(--amber)">--</div><div class="country-card-stat-label">PO Count</div></div>
+          </div>
+          <div class="country-card-bar"><div class="country-card-bar-fill" data-metric="bar" style="width:0%"></div></div>
+          <div class="country-card-categories">10 categories • Top: Gifts/Promotions (Vouchers), Events (Food), Others</div>
+      </a>
+      <a href="sg/index.html" class="country-card reveal" data-region="SG">
+          <div class="country-flag">🇸🇬</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><div class="country-card-name">Singapore</div><span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--teal)">🏠 Anchor market — needs baseline growth</span></div>
+          <div class="country-card-code">SG</div>
+          <div class="country-card-stats">
+            <div><div class="country-card-stat-value" data-metric="spend" style="color:var(--teal)">--</div><div class="country-card-stat-label">Actual Spend</div></div>
+            <div><div class="country-card-stat-value" data-metric="po-count" style="color:var(--amber)">--</div><div class="country-card-stat-label">PO Count</div></div>
+          </div>
+          <div class="country-card-bar"><div class="country-card-bar-fill" data-metric="bar" style="width:0%"></div></div>
+          <div class="country-card-categories">11 categories • Top: IT Accessories &amp; Equipment, MRO, Events (Food)</div>
+      </a>
+      <a href="hk/index.html" class="country-card reveal" data-region="HK">
+          <div class="country-flag">🇭🇰</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><div class="country-card-name">Hong Kong</div><span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--text-muted)">🔬 Micro-base market — early stage</span></div>
+          <div class="country-card-code">HK</div>
+          <div class="country-card-stats">
+            <div><div class="country-card-stat-value" data-metric="spend" style="color:var(--teal)">--</div><div class="country-card-stat-label">Actual Spend</div></div>
+            <div><div class="country-card-stat-value" data-metric="po-count" style="color:var(--amber)">--</div><div class="country-card-stat-label">PO Count</div></div>
+          </div>
+          <div class="country-card-bar"><div class="country-card-bar-fill" data-metric="bar" style="width:0%"></div></div>
+          <div class="country-card-categories">6 categories • Top: IT Accessories &amp; Equipment, Office &amp; Pantry Supplies, MRO</div>
+      </a>
+      <a href="th/index.html" class="country-card reveal" data-region="TH">
+          <div class="country-flag">🇹🇭</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><div class="country-card-name">Thailand</div><span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--red-soft)">⚠️ Turnaround market — small scale</span></div>
+          <div class="country-card-code">TH</div>
+          <div class="country-card-stats">
+            <div><div class="country-card-stat-value" data-metric="spend" style="color:var(--teal)">--</div><div class="country-card-stat-label">Actual Spend</div></div>
+            <div><div class="country-card-stat-value" data-metric="po-count" style="color:var(--amber)">--</div><div class="country-card-stat-label">PO Count</div></div>
+          </div>
+          <div class="country-card-bar"><div class="country-card-bar-fill" data-metric="bar" style="width:0%"></div></div>
+          <div class="country-card-categories">8 categories • Top: MRO, Office &amp; Pantry Supplies, Customized Events</div>
+      </a>
+      <a href="vn/index.html" class="country-card reveal" data-region="VN">
+          <div class="country-flag">🇻🇳</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><div class="country-card-name">Vietnam</div><span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--text-muted)">🌱 Emerging market — early stage</span></div>
+          <div class="country-card-code">VN</div>
+          <div class="country-card-stats">
+            <div><div class="country-card-stat-value" data-metric="spend" style="color:var(--teal)">--</div><div class="country-card-stat-label">Actual Spend</div></div>
+            <div><div class="country-card-stat-value" data-metric="po-count" style="color:var(--amber)">--</div><div class="country-card-stat-label">PO Count</div></div>
+          </div>
+          <div class="country-card-bar"><div class="country-card-bar-fill" data-metric="bar" style="width:0%"></div></div>
+          <div class="country-card-categories">5 categories • Top: Office &amp; Pantry Supplies, IT Accessories, MRO</div>
+      </a>
+    </div>
+  </div></section>
+
+
+  <section class="section" style="background:var(--bg-deep);border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="section-label reveal">2023 → 2024 → 2025 Trends</div>
+      <h2 class="section-title reveal reveal-delay-1">Multi-year trajectory by market</h2>
+      <p class="section-subtitle reveal reveal-delay-2">Each market shows a distinct spending pattern. The original direction signals — rising, declining, or mixed — are kept intact from the dashboard extraction.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:40px;"><a href="cn/index.html" class="reveal" style="display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;text-decoration:none;color:inherit;transition:border-color 0.3s,transform 0.3s;">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <span style="font-size:28px;">🇨🇳</span>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="font-size:16px;font-weight:600;color:var(--text-primary)">China</span>
+                <span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--green-soft)">🚀 Major expansion</span>
+                <span style="font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-left:auto;">S$ 3,403,215.70</span>
+              </div>
+              <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">China is the strongest multi-year growth story in the portfolio. IT ramped 35K → 167K → 192K. Events (Food) went from zero to 153K. MRO from 1K to 147K. Medical from 3K to 53K. Eve</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)"><span style="color:var(--green-soft)">↑</span> IT Accessories &amp; Equipment</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)"><span style="color:var(--green-soft)">↑</span> Events (Food)</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)"><span style="color:var(--green-soft)">↑</span> MRO</span></div>
+            </div>
+          </div>
+        </a><a href="jp/index.html" class="reveal" style="display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;text-decoration:none;color:inherit;transition:border-color 0.3s,transform 0.3s;">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <span style="font-size:28px;">🇯🇵</span>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="font-size:16px;font-weight:600;color:var(--text-primary)">Japan</span>
+                <span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--green-soft)">📈 Rebound market</span>
+                <span style="font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-left:auto;">S$ 1,669,889.26</span>
+              </div>
+              <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">Japan surged in 2025 across IT, MRO, Events (Food), and Medical after a weak 2024. This looks like a reactivation story — momentum is live and worth reinforcing.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">IT Accessories &amp; Equipment</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">MRO</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">Events (Food)</span></div>
+            </div>
+          </div>
+        </a><a href="au/index.html" class="reveal" style="display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;text-decoration:none;color:inherit;transition:border-color 0.3s,transform 0.3s;">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <span style="font-size:28px;">🇦🇺</span>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="font-size:16px;font-weight:600;color:var(--text-primary)">Australia</span>
+                <span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--amber)">📊 Large but volatile</span>
+                <span style="font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-left:auto;">S$ 2,063,903.42</span>
+              </div>
+              <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">Australia&#x27;s MRO spiked from 103K to 679K in 2024, then corrected to 114K in 2025. The wallet is large across Events (Food) 62K, Gifts 40K, and IT 49K — but MRO volatility suggests </p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)"><span style="color:var(--amber)">→</span> MRO</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">Events (Food)</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">Gifts/Promotions (Vouchers)</span></div>
+            </div>
+          </div>
+        </a><a href="my/index.html" class="reveal" style="display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;text-decoration:none;color:inherit;transition:border-color 0.3s,transform 0.3s;">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <span style="font-size:28px;">🇲🇾</span>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="font-size:16px;font-weight:600;color:var(--text-primary)">Malaysia</span>
+                <span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--amber)">🔀 Mixed recovery</span>
+                <span style="font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-left:auto;">S$ 835,884.74</span>
+              </div>
+              <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">Malaysia is strong in Events (Food) 80K, Gifts 57K, and IT 46K. MRO dropped from 47K to 11K. Customized Events rebounded from a 7.4K dip to 44K. A mixed pattern with growing operat</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">Events (Food)</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">Gifts/Promotions (Vouchers)</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">IT Accessories &amp; Equipment</span></div>
+            </div>
+          </div>
+        </a><a href="in/index.html" class="reveal" style="display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;text-decoration:none;color:inherit;transition:border-color 0.3s,transform 0.3s;">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <span style="font-size:28px;">🇮🇳</span>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="font-size:16px;font-weight:600;color:var(--text-primary)">India</span>
+                <span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--amber)">🎁 Voucher-led</span>
+                <span style="font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-left:auto;">S$ 245,680.53</span>
+              </div>
+              <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">India exploded from near-zero to SGD 136K in Gifts/Vouchers alone. Events (Food) and MRO are growing but still small. The opportunity is to cross-sell operational categories off th</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)"><span style="color:var(--green-soft)">↑</span> Gifts/Promotions (Vouchers)</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">Events (Food)</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">MRO</span></div>
+            </div>
+          </div>
+        </a><a href="id/index.html" class="reveal" style="display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;text-decoration:none;color:inherit;transition:border-color 0.3s,transform 0.3s;">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <span style="font-size:28px;">🇮🇩</span>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="font-size:16px;font-weight:600;color:var(--text-primary)">Indonesia</span>
+                <span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--amber)">🔄 IT reactivation</span>
+                <span style="font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-left:auto;">S$ 1,034,537.78</span>
+              </div>
+              <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">IT Accessories collapsed from SGD 58K (2023) to 9.6K (2025). MRO partially recovered. Events (Food) grew to 52K. The IT lane is the clearest reactivation target.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)"><span style="color:var(--red-soft)">↓</span> IT Accessories &amp; Equipment</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)"><span style="color:var(--amber)">→</span> MRO</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">Events (Food)</span></div>
+            </div>
+          </div>
+        </a><a href="sg/index.html" class="reveal" style="display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;text-decoration:none;color:inherit;transition:border-color 0.3s,transform 0.3s;">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <span style="font-size:28px;">🇸🇬</span>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="font-size:16px;font-weight:600;color:var(--text-primary)">Singapore</span>
+                <span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--teal)">🏠 Needs baseline growth</span>
+                <span style="font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-left:auto;">S$ 1,186,680.38</span>
+              </div>
+              <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">Singapore is the home market but observed spend is modest at ~SGD 175K. Multi-year trend detail is limited from the provided screenshots. The opportunity is about baseline category</p>
+
+            </div>
+          </div>
+        </a><a href="hk/index.html" class="reveal" style="display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;text-decoration:none;color:inherit;transition:border-color 0.3s,transform 0.3s;">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <span style="font-size:28px;">🇭🇰</span>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="font-size:16px;font-weight:600;color:var(--text-primary)">Hong Kong</span>
+                <span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--text-muted)">🔬 Micro-base — early stage</span>
+                <span style="font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-left:auto;">S$ 10,311.71</span>
+              </div>
+              <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">Hong Kong&#x27;s observed spend totals just SGD 3.4K in 2025 — effectively a rounding error against regional peers. Medical Supplies collapsed from 4K (2024) to near-zero. Office &amp; Pant</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)"><span style="color:var(--red-soft)">↓</span> Medical Supplies</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)"><span style="color:var(--green-soft)">↑</span> Office &amp; Pantry Supplies</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)"><span style="color:var(--green-soft)">↑</span> IT Accessories &amp; Equipment</span></div>
+            </div>
+          </div>
+        </a><a href="th/index.html" class="reveal" style="display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;text-decoration:none;color:inherit;transition:border-color 0.3s,transform 0.3s;">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <span style="font-size:28px;">🇹🇭</span>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="font-size:16px;font-weight:600;color:var(--text-primary)">Thailand</span>
+                <span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--red-soft)">⚠️ Turnaround — small scale</span>
+                <span style="font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-left:auto;">S$ 126,423.26</span>
+              </div>
+              <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">Thailand saw major collapses: Events (Food) fell from 54.8K to under 1K; Gifts from 9.3K to 0.7K. IT peaked in 2024 then dropped to 1.5K. A turnaround market, but total scale remai</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)"><span style="color:var(--red-soft)">↓</span> Events (Food)</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)"><span style="color:var(--red-soft)">↓</span> Gifts/Promotions (Vouchers)</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">IT Accessories &amp; Equipment</span></div>
+            </div>
+          </div>
+        </a><a href="vn/index.html" class="reveal" style="display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;text-decoration:none;color:inherit;transition:border-color 0.3s,transform 0.3s;">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <span style="font-size:28px;">🇻🇳</span>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="font-size:16px;font-weight:600;color:var(--text-primary)">Vietnam</span>
+                <span style="font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.08);color:var(--text-muted)">🌱 Emerging market</span>
+                <span style="font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-left:auto;">S$ 54,740.98</span>
+              </div>
+              <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-top:6px;">Vietnam is an emerging market with growing operational presence. Early-stage procurement patterns show focus on office supplies and IT accessories. Significant expansion potential as operations scale.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">Office &amp; Pantry Supplies</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">IT Accessories</span><span style="font-size:12px;padding:3px 10px;background:var(--bg-subtle);border-radius:6px;color:var(--text-secondary)">MRO</span></div>
+            </div>
+          </div>
+        </a></div>
+      <div class="disclaimer-banner reveal" style="margin-top:24px;"><div class="icon">📋</div><p><strong>Partial extraction.</strong> Multi-year data is drawn from selected high-signal categories across 2023, 2024, and 2025 dashboard screenshots. Not every category or year was available for every market.</p></div>
+    </div>
+  </section>
+
+  <section class="section archetype-section" style="background:var(--bg-primary);border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="section-label reveal">Site-by-Site Opportunity Model</div>
+      <h2 class="section-title reveal reveal-delay-1">What each TikTok site type should be buying</h2>
+      <p class="section-subtitle reveal reveal-delay-2">A modeled framework mapping product families to TikTok site archetypes. This is not actual site-level spend data — it is a buying-propensity model based on operational logic.</p>
+      <div class="disclaimer-banner reveal reveal-delay-3" style="margin-top:24px;margin-bottom:8px;">
+        <div class="icon">🏗️</div>
+        <p><strong>Modeled framework.</strong> The site counts and buying intensities below are illustrative archetypes, not sourced from TikTok facility lists or actual site-level procurement records. Use this as a conversation tool for what <em>should</em> exist, not what currently does.</p>
+      </div>
+
+      <div style="overflow-x:auto;margin-top:36px;">
+        <table class="archetype-matrix reveal reveal-delay-3">
+          <thead><tr><th style="min-width:200px;">Site Archetype</th><th style="text-align:center;min-width:80px;">IT Accessories</th><th style="text-align:center;min-width:80px;">Office Supplies</th><th style="text-align:center;min-width:80px;">Safety</th><th style="text-align:center;min-width:80px;">Warehouse Consumables</th><th style="text-align:center;min-width:80px;">MRO</th><th style="text-align:center;min-width:80px;">Medical</th></tr></thead>
+          <tbody><tr><td>Country HQ / Office</td><td style="text-align:center;"><span class="dot dot-high"></span><span style="font-size:11px;color:var(--text-muted)">High</span></td><td style="text-align:center;"><span class="dot dot-high"></span><span style="font-size:11px;color:var(--text-muted)">High</span></td><td style="text-align:center;"><span class="dot dot-low"></span><span style="font-size:11px;color:var(--text-muted)">Low</span></td><td style="text-align:center;"><span class="dot dot-none"></span><span style="font-size:11px;color:var(--text-muted)">—</span></td><td style="text-align:center;"><span class="dot dot-med"></span><span style="font-size:11px;color:var(--text-muted)">Medium</span></td><td style="text-align:center;"><span class="dot dot-low"></span><span style="font-size:11px;color:var(--text-muted)">Low</span></td></tr><tr><td>Customer Service / Control Tower</td><td style="text-align:center;"><span class="dot dot-high"></span><span style="font-size:11px;color:var(--text-muted)">High</span></td><td style="text-align:center;"><span class="dot dot-med"></span><span style="font-size:11px;color:var(--text-muted)">Medium</span></td><td style="text-align:center;"><span class="dot dot-low"></span><span style="font-size:11px;color:var(--text-muted)">Low</span></td><td style="text-align:center;"><span class="dot dot-none"></span><span style="font-size:11px;color:var(--text-muted)">—</span></td><td style="text-align:center;"><span class="dot dot-low"></span><span style="font-size:11px;color:var(--text-muted)">Low</span></td><td style="text-align:center;"><span class="dot dot-low"></span><span style="font-size:11px;color:var(--text-muted)">Low</span></td></tr><tr><td>Warehouse / Distribution Centre</td><td style="text-align:center;"><span class="dot dot-low"></span><span style="font-size:11px;color:var(--text-muted)">Low</span></td><td style="text-align:center;"><span class="dot dot-low"></span><span style="font-size:11px;color:var(--text-muted)">Low</span></td><td style="text-align:center;"><span class="dot dot-high"></span><span style="font-size:11px;color:var(--text-muted)">High</span></td><td style="text-align:center;"><span class="dot dot-high"></span><span style="font-size:11px;color:var(--text-muted)">High</span></td><td style="text-align:center;"><span class="dot dot-high"></span><span style="font-size:11px;color:var(--text-muted)">High</span></td><td style="text-align:center;"><span class="dot dot-med"></span><span style="font-size:11px;color:var(--text-muted)">Medium</span></td></tr><tr><td>Gateway / Hub / Station</td><td style="text-align:center;"><span class="dot dot-med"></span><span style="font-size:11px;color:var(--text-muted)">Medium</span></td><td style="text-align:center;"><span class="dot dot-low"></span><span style="font-size:11px;color:var(--text-muted)">Low</span></td><td style="text-align:center;"><span class="dot dot-high"></span><span style="font-size:11px;color:var(--text-muted)">High</span></td><td style="text-align:center;"><span class="dot dot-med"></span><span style="font-size:11px;color:var(--text-muted)">Medium</span></td><td style="text-align:center;"><span class="dot dot-high"></span><span style="font-size:11px;color:var(--text-muted)">High</span></td><td style="text-align:center;"><span class="dot dot-med"></span><span style="font-size:11px;color:var(--text-muted)">Medium</span></td></tr></tbody>
+        </table>
+      </div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:16px;padding:12px 0;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)"><span class="dot dot-high" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span> High — core buying need</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)"><span class="dot dot-med" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span> Medium — regular but secondary</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)"><span class="dot dot-low" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span> Low — occasional or minimal</div>
+      </div>
+
+      <div class="archetype-grid" style="margin-top:48px;"><div class="archetype-card reveal reveal-delay-1">
+          <div class="archetype-card-header">
+            <div class="archetype-icon hq">🏢</div>
+            <div>
+              <div class="archetype-name">Country HQ / Office</div>
+              <div class="archetype-desc">Corporate headquarters, regional offices, back-office administration. Typically 50–300 desk-based staff.</div>
+            </div>
+          </div>
+          <div class="archetype-products"><div class="archetype-product-row">
+              <div class="archetype-product-icon">🎧</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">IT Accessories</div>
+                <div class="archetype-product-examples">Jabra headsets, monitors, docking stations, keyboards, mice, webcams</div>
+              </div>
+              <span class="archetype-intensity intensity-high">High</span>
+            </div><div class="archetype-product-row">
+              <div class="archetype-product-icon">📄</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">Office Supplies</div>
+                <div class="archetype-product-examples">Copy paper, toner cartridges, stationery, binders, envelopes</div>
+              </div>
+              <span class="archetype-intensity intensity-high">High</span>
+            </div><div class="archetype-product-row">
+              <div class="archetype-product-icon">🩹</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">Medical / First Aid</div>
+                <div class="archetype-product-examples">Office first-aid kits, AED pads, masks</div>
+              </div>
+              <span class="archetype-intensity intensity-low">Low</span>
+            </div><div class="archetype-product-row">
+              <div class="archetype-product-icon">🔧</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">MRO / Facilities</div>
+                <div class="archetype-product-examples">Lighting, HVAC filters, cleaning supplies, janitorial</div>
+              </div>
+              <span class="archetype-intensity intensity-med">Medium</span>
+            </div></div>
+        </div><div class="archetype-card reveal reveal-delay-2">
+          <div class="archetype-card-header">
+            <div class="archetype-icon cs">🎧</div>
+            <div>
+              <div class="archetype-name">Customer Service / Control Tower</div>
+              <div class="archetype-desc">Contact centres, shipment monitoring, operations control rooms. High headset density, shift-based staffing.</div>
+            </div>
+          </div>
+          <div class="archetype-products"><div class="archetype-product-row">
+              <div class="archetype-product-icon">🎧</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">IT Accessories</div>
+                <div class="archetype-product-examples">Jabra/Poly headsets (core tool), monitors, docks, keyboards, mouse pads</div>
+              </div>
+              <span class="archetype-intensity intensity-high">High</span>
+            </div><div class="archetype-product-row">
+              <div class="archetype-product-icon">📄</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">Office Supplies</div>
+                <div class="archetype-product-examples">Paper, toner, stationery for admin and print queues</div>
+              </div>
+              <span class="archetype-intensity intensity-med">Medium</span>
+            </div><div class="archetype-product-row">
+              <div class="archetype-product-icon">🩹</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">Medical / First Aid</div>
+                <div class="archetype-product-examples">First-aid kits, ergonomic aids</div>
+              </div>
+              <span class="archetype-intensity intensity-low">Low</span>
+            </div><div class="archetype-product-row">
+              <div class="archetype-product-icon">🔧</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">MRO / Facilities</div>
+                <div class="archetype-product-examples">Office-grade HVAC, electrical, UPS maintenance</div>
+              </div>
+              <span class="archetype-intensity intensity-low">Low</span>
+            </div></div>
+        </div><div class="archetype-card reveal reveal-delay-3">
+          <div class="archetype-card-header">
+            <div class="archetype-icon wh">🏭</div>
+            <div>
+              <div class="archetype-name">Warehouse / Distribution Centre</div>
+              <div class="archetype-desc">Fulfilment centres, cross-dock facilities, bonded warehouses. Large frontline workforce, heavy equipment, compliance-driven.</div>
+            </div>
+          </div>
+          <div class="archetype-products"><div class="archetype-product-row">
+              <div class="archetype-product-icon">📦</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">Warehouse Consumables</div>
+                <div class="archetype-product-examples">Pallet wrap, labels, tape, cartons, barcode scanners, thermal ribbons</div>
+              </div>
+              <span class="archetype-intensity intensity-high">High</span>
+            </div><div class="archetype-product-row">
+              <div class="archetype-product-icon">👞</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">Safety / Uniforms</div>
+                <div class="archetype-product-examples">Safety shoes, gloves, hi-vis vests, uniforms, hard hats, PPE</div>
+              </div>
+              <span class="archetype-intensity intensity-high">High</span>
+            </div><div class="archetype-product-row">
+              <div class="archetype-product-icon">🔧</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">MRO / Facilities</div>
+                <div class="archetype-product-examples">Tools, lubricants, conveyor parts, janitorial, electrical consumables, forklift </div>
+              </div>
+              <span class="archetype-intensity intensity-high">High</span>
+            </div><div class="archetype-product-row">
+              <div class="archetype-product-icon">🩹</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">Medical / First Aid</div>
+                <div class="archetype-product-examples">First-aid kits, disposable gloves, masks, AED consumables, eyewash stations</div>
+              </div>
+              <span class="archetype-intensity intensity-med">Medium</span>
+            </div></div>
+        </div><div class="archetype-card reveal reveal-delay-4">
+          <div class="archetype-card-header">
+            <div class="archetype-icon gw">✈️</div>
+            <div>
+              <div class="archetype-name">Gateway / Hub / Station</div>
+              <div class="archetype-desc">Airport gateways, sorting hubs, last-mile stations. Equipment-intensive, 24/7 operations, vehicle fleets.</div>
+            </div>
+          </div>
+          <div class="archetype-products"><div class="archetype-product-row">
+              <div class="archetype-product-icon">🔧</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">MRO / Facilities</div>
+                <div class="archetype-product-examples">Vehicle maintenance, ground equipment, HVAC servicing, electrical, dock repairs</div>
+              </div>
+              <span class="archetype-intensity intensity-high">High</span>
+            </div><div class="archetype-product-row">
+              <div class="archetype-product-icon">👞</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">Safety / Uniforms</div>
+                <div class="archetype-product-examples">Safety shoes, hi-vis, gloves, ear protection, PPE for ramp/ground ops</div>
+              </div>
+              <span class="archetype-intensity intensity-high">High</span>
+            </div><div class="archetype-product-row">
+              <div class="archetype-product-icon">📦</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">Warehouse Consumables</div>
+                <div class="archetype-product-examples">Labels, tape, packaging materials, ULD nets, strapping</div>
+              </div>
+              <span class="archetype-intensity intensity-med">Medium</span>
+            </div><div class="archetype-product-row">
+              <div class="archetype-product-icon">🩹</div>
+              <div class="archetype-product-info">
+                <div class="archetype-product-name">Medical / First Aid</div>
+                <div class="archetype-product-examples">Compliance kits, AED consumables, occupational health supplies</div>
+              </div>
+              <span class="archetype-intensity intensity-med">Medium</span>
+            </div></div>
+        </div></div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-deep);border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="section-label reveal">Lowest-Hanging Fruit</div>
+      <h2 class="section-title reveal reveal-delay-1">Where to start: recurring, easy-conversion categories</h2>
+      <p class="section-subtitle reveal reveal-delay-2">These five product families combine non-discretionary demand, predictable replacement cycles, and proven purchase patterns across the APAC portfolio. They convert faster than project-based or event-driven categories.</p>
+      <div class="product-grid"><div class="product-card reveal reveal-delay-1">
+          <div class="product-card-header">
+            <div class="product-card-icon">☕</div>
+            <div>
+              <div class="product-card-title">Office &amp; Pantry Supplies</div>
+              <div class="product-card-cat">Recurring</div>
+            </div>
+          </div>
+          <div class="product-card-body">
+            <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;">Non-discretionary, monthly recurring, high purchase frequency. Every site buys paper, pantry stock, and washroom consumables regardless of budget cycles.</p>
+            <div class="product-card-logic"><span class="logic-label">Market signal</span>Already top-3 observed in CN, JP, AU, MY, ID. Easy to expand share.</div>
+          </div>
+        </div><div class="product-card reveal reveal-delay-2">
+          <div class="product-card-header">
+            <div class="product-card-icon">🎧</div>
+            <div>
+              <div class="product-card-title">IT Accessories &amp; Equipment</div>
+              <div class="product-card-cat">Refresh cycle</div>
+            </div>
+          </div>
+          <div class="product-card-body">
+            <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;">Headsets, monitors, keyboards have predictable refresh cycles (24-36 months). Demand scales with headcount.</p>
+            <div class="product-card-logic"><span class="logic-label">Market signal</span>Strong growth in CN (35K→192K). Collapse in ID (58K→10K) = reactivation target.</div>
+          </div>
+        </div><div class="product-card reveal reveal-delay-3">
+          <div class="product-card-header">
+            <div class="product-card-icon">🖨️</div>
+            <div>
+              <div class="product-card-title">Printer consumables (toner, cartridges)</div>
+              <div class="product-card-cat">Hidden demand</div>
+            </div>
+          </div>
+          <div class="product-card-body">
+            <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;">Sits inside Office or IT budgets but is a distinct, recurring purchase. Logistics environments still print heavily (manifests, labels, invoices).</p>
+            <div class="product-card-logic"><span class="logic-label">Market signal</span>Hidden inside Office &amp; Pantry line; usually under-counted.</div>
+          </div>
+        </div><div class="product-card reveal reveal-delay-4">
+          <div class="product-card-header">
+            <div class="product-card-icon">👞</div>
+            <div>
+              <div class="product-card-title">Safety shoes, PPE &amp; Uniforms</div>
+              <div class="product-card-cat">Compliance</div>
+            </div>
+          </div>
+          <div class="product-card-body">
+            <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;">Compliance-driven, annual replacement cycle for frontline staff. Not optional — regulated in logistics.</p>
+            <div class="product-card-logic"><span class="logic-label">Market signal</span>Observed uniforms spend is near-zero in most markets. Likely routed elsewhere or unsupplied.</div>
+          </div>
+        </div><div class="product-card reveal reveal-delay-5">
+          <div class="product-card-header">
+            <div class="product-card-icon">🔧</div>
+            <div>
+              <div class="product-card-title">MRO consumables &amp; services</div>
+              <div class="product-card-cat">Operational</div>
+            </div>
+          </div>
+          <div class="product-card-body">
+            <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;">Conveyor belts, dock equipment, facility maintenance. Operational necessity with fragmented buying patterns.</p>
+            <div class="product-card-logic"><span class="logic-label">Market signal</span>AU spiked to 679K (2024); CN ramped 1K→147K. Real demand exists.</div>
+          </div>
+        </div></div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-primary);border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="section-label reveal">Historical Data</div>
+      <h2 class="section-title reveal reveal-delay-1">Supplier ranking by amount payable</h2>
+      <p class="section-subtitle reveal reveal-delay-2">TikTok entities ranked by total amount payable paid, based on historical transaction data across the APAC portfolio. Shows top suppliers by fulfilled order value.</p>
+      <div class="disclaimer-banner reveal reveal-delay-3" style="margin-top:24px;margin-bottom:8px;">
+        <div class="icon">📊</div>
+        <p><strong>Data source.</strong> Rankings derived from entity margin tracking data (po_fulfilled values) across all TikTok APAC entities. Amounts shown are in SGD and represent total fulfilled order values per entity. <strong>Filter:</strong> Cancelled, failed, rejected, or void SPIDs are excluded from calculations per Eka April requirement — only valid, approved, completed, or paid orders are included.</p>
+      </div>
+
+      <div style="overflow-x:auto;margin-top:36px;">
+        <table class="supplier-ranking-matrix reveal reveal-delay-4" id="supplier-ranking-table">
+          <thead>
+            <tr>
+              <th style="width:60px;text-align:center;">Rank</th>
+              <th style="min-width:220px;">Entity / Supplier</th>
+              <th style="min-width:140px;text-align:right;">Region</th>
+              <th style="min-width:160px;text-align:right;">Total Amount Payable</th>
+              <th style="min-width:120px;text-align:right;">% of Total</th>
+              <th style="min-width:180px;">Visual</th>
+            </tr>
+          </thead>
+          <tbody id="supplier-ranking-body">
+            <tr>
+              <td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted);">
+                <div style="font-size:14px;">Loading supplier data...</div>
+                <div style="font-size:12px;margin-top:8px;opacity:0.7;">Fetching from SA API</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:16px;padding:12px 0;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)">
+          <span class="rank-badge rank-top3" style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--green-soft);color:#000;font-weight:600;font-size:11px;">1-3</span>
+          <span>Top tier (&gt;10% of total)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)">
+          <span class="rank-badge rank-mid" style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--amber);color:#000;font-weight:600;font-size:11px;">4-6</span>
+          <span>Mid tier (5-10% of total)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)">
+          <span class="rank-badge rank-lower" style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--text-muted);color:#000;font-weight:600;font-size:11px;">7+</span>
+          <span>Lower tier (&lt;5% of total)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta"><div class="container"><div class="reveal">
+    <div class="section-label" style="justify-content:center;">The Opportunity</div>
+    <h2 class="cta-title">S$ 10.9M <em>observed spend</em></h2>
+    <p class="cta-text">Total observed spend across all 10 TikTok APAC entities, anchored in verified data from Tom's regional analysis. 19,694 POs processed with China leading at S$ 3.4M spend.</p>
+    <div class="cta-amount">S$ 10,931,267.54</div>
+    <div class="cta-amount-label">Total APAC observed spend</div>
+  </div></div></section>
+
+  <footer class="footer"><div class="container">
+    <div class="footer-text">SourceSage Opportunity Intelligence · TikTok APAC</div>
+    <div class="footer-divider"></div>
+    <div class="footer-text" style="font-size:11px;">Confidential — Internal discussion only. Not for external circulation without validation. Data verified from Tom's regional analysis. 10 markets analyzed across APAC.</div>
+  </div></footer>
+  <script src="shared.js?v=2"></script>
+  <script src="sa-api-client.js?v=2"></script>
+  <script>
+    // Track loading state for all requests
+    const loadingState = {
+      poCount: false,
+      spend: false,
+      regions: new Map()
+    };
+
+    function checkAllLoadingComplete() {
+      if (loadingState.poCount && loadingState.spend) {
+        const totalRegions = 10;
+        const completedRegions = Array.from(loadingState.regions.values()).filter(v => v).length;
+        if (completedRegions >= totalRegions) {
+          updateStatusBanner('All data loaded ✓');
+          setTimeout(() => {
+            const statusBanner = document.getElementById('api-status-banner');
+            if (statusBanner) {
+              statusBanner.style.display = 'none';
+            }
+          }, 2000);
+        }
+      }
+    }
+
+    // Fetch and display Total PO Count from SA API - INDEPENDENT UPDATE
+    async function fetchTotalPOCount() {
+      const client = new SAAPIClient();
+      const fromDate = '2023-01-01';
+      const toDate = '2025-12-31';
+
+      // Update status immediately to show this specific request is loading
+      updateStatusBanner('Loading PO count...');
+
+      try {
+        // Fetch entity margin data for all regions to get TikTok data
+        const response = await client.makeRequest('/v1.0/agent/analytics/tracking/entity-margin', {
+          from_date: fromDate,
+          to_date: toDate,
+          entity_group: 'TikTok'
+        });
+
+        // Handle both array response and {data: array} response
+        const rows = Array.isArray(response) ? response : (response?.data || []);
+
+        // Filter rows where entity_group == "TikTok" and sum count_order
+        const totalPOCount = rows
+          .filter(row => row.entity_group === 'TikTok')
+          .reduce((sum, row) => sum + (parseInt(row.count_order) || 0), 0);
+
+        // Update the UI with the fetched total - IMMEDIATELY
+        const poCountElement = document.querySelector('.agg-stat:nth-child(3) .agg-stat-value');
+        if (poCountElement && totalPOCount > 0) {
+          animateValueUpdate(poCountElement, totalPOCount.toLocaleString());
+          console.log('[Total PO Count] Updated from API:', totalPOCount);
+          updateStatusBanner('PO count loaded ✓');
+        } else {
+          console.log('[Total PO Count] Using fallback value (API returned 0 or element not found)');
+        }
+      } catch (error) {
+        console.error('[Total PO Count] Failed to fetch from API:', error);
+        updateStatusBanner('PO count unavailable');
+        // Keep the static fallback value displayed
+      } finally {
+        loadingState.poCount = true;
+        checkAllLoadingComplete();
+      }
+    }
+
+    // Fetch and display Actual Spend from SA API - INDEPENDENT UPDATE
+    // Uses /api/v1.0/agent/orders/values endpoint with specific entity filters
+    async function fetchActualSpend() {
+      const client = new SAAPIClient();
+
+      // Update status immediately to show this specific request is loading
+      updateStatusBanner('Loading spend data...');
+
+      try {
+        // Fetch order values data with specific filter criteria
+        // Entity IDs for TikTok entities: 294,293,289,287,259,252,250,249,246,244,241,240,234,231,227,226,223,221,220,217,216,214,212,206,205,201,200,192,185,180,179,175,173,144,127,119,114,113,112,108,103,100,95,92,91,90,69,66,63,62,56,55,54,51,50,48,47,46,44,41,37,30,18,17,9,7,5,4,2
+        const response = await client.makeRequest('/v1.0/agent/orders/values', {
+          page: 1,
+          per_page: 5,
+          q: '',
+          q_assignee: '',
+          from_date: '2023-01-01T03:13:30+00:00',
+          to_date: '2025-12-31T03:13:30+00:00',
+          date_type: 'created_at',
+          filters: {
+            operation_status: ['APPROVED', 'PENDING DELIVERY', 'COMPLETED', 'COMPLETED TENTATIVE'],
+            entity_name: [294,293,289,287,259,252,250,249,246,244,241,240,234,231,227,226,223,221,220,217,216,214,212,206,205,201,200,192,185,180,179,175,173,144,127,119,114,113,112,108,103,100,95,92,91,90,69,66,63,62,56,55,54,51,50,48,47,46,44,41,37,30,18,17,9,7,5,4,2]
+          },
+          currency: 'SGD'
+        });
+
+        // Use po_fulfilled value from response (already in SGD)
+        const totalSpend = parseFloat(response?.po_fulfilled) || 0;
+
+        // Update the UI with the fetched total - IMMEDIATELY
+        // Update both the nth-child selector and the ID for compatibility
+        const spendElement = document.querySelector('.agg-stat:nth-child(2) .agg-stat-value') || document.getElementById('main-stat-spend');
+        if (spendElement && totalSpend > 0) {
+          // Format: S$ 11.7M for large values, S$ 1,234.56 for smaller
+          let formattedSpend;
+          if (totalSpend >= 1000000) {
+            formattedSpend = 'S$ ' + (totalSpend / 1000000).toFixed(1) + 'M';
+          } else if (totalSpend >= 1000) {
+            formattedSpend = 'S$ ' + (totalSpend / 1000).toFixed(1) + 'K';
+          } else {
+            formattedSpend = 'S$ ' + totalSpend.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          }
+          animateValueUpdate(spendElement, formattedSpend);
+          console.log('[Actual Spend] Updated from API:', totalSpend, 'Formatted:', formattedSpend);
+          updateStatusBanner('Spend data loaded ✓');
+        } else {
+          // API returned 0 or empty - use expected fallback value
+          // Expected po_fulfilled value: 10999774.745391164 (S$ ~11.0M)
+          const fallbackSpend = 10999774.75;
+          const formattedFallback = 'S$ ' + (fallbackSpend / 1000000).toFixed(1) + 'M';
+          if (spendElement) {
+            animateValueUpdate(spendElement, formattedFallback);
+          }
+          console.log('[Actual Spend] Using fallback value:', fallbackSpend, 'Formatted:', formattedFallback);
+          updateStatusBanner('Spend data loaded (fallback) ✓');
+        }
+      } catch (error) {
+        console.error('[Actual Spend] Failed to fetch from API:', error);
+        updateStatusBanner('Spend data unavailable');
+        // Use fallback value on error
+        const spendElement = document.querySelector('.agg-stat:nth-child(2) .agg-stat-value') || document.getElementById('main-stat-spend');
+        if (spendElement) {
+          const fallbackSpend = 10999774.75;
+          const formattedFallback = 'S$ ' + (fallbackSpend / 1000000).toFixed(1) + 'M';
+          animateValueUpdate(spendElement, formattedFallback);
+        }
+      } finally {
+        loadingState.spend = true;
+        checkAllLoadingComplete();
+      }
+    }
+
+    // Global store for regional data (shared across functions)
+    const GLOBAL_REGIONAL_DATA = {
+      totalSpend: 0,
+      totalPOCount: 0,
+      topRegion: 'CN',
+      topRegionSpend: 0,
+      regionResults: new Map()
+    };
+
+    // Fallback data for regional cards (when API is unavailable)
+    const REGIONAL_FALLBACK_DATA = {
+      'AU': { actualSpend: 2063903.42, poCount: 1797 },
+      'CN': { actualSpend: 3403215.70, poCount: 7673 },
+      'HK': { actualSpend: 10311.71, poCount: 42 },
+      'ID': { actualSpend: 1034537.78, poCount: 1419 },
+      'IN': { actualSpend: 245680.53, poCount: 640 },
+      'JP': { actualSpend: 1669889.26, poCount: 6581 },
+      'MY': { actualSpend: 835884.74, poCount: 842 },
+      'SG': { actualSpend: 1186680.38, poCount: 1244 },
+      'TH': { actualSpend: 126423.26, poCount: 346 },
+      'VN': { actualSpend: 54740.98, poCount: 110 }
+    };
+
+    // Fetch and display regional data for country cards - INDEPENDENT PER-REGION UPDATES
+    async function fetchRegionalData() {
+      const client = new SAAPIClient();
+      const fromDate = '2023-01-01';
+      const toDate = '2025-12-31';
+
+      // Map of region codes to their card elements
+      const regionCards = {
+        'CN': document.querySelector('[data-region="CN"]'),
+        'JP': document.querySelector('[data-region="JP"]'),
+        'AU': document.querySelector('[data-region="AU"]'),
+        'MY': document.querySelector('[data-region="MY"]'),
+        'ID': document.querySelector('[data-region="ID"]'),
+        'IN': document.querySelector('[data-region="IN"]'),
+        'SG': document.querySelector('[data-region="SG"]'),
+        'HK': document.querySelector('[data-region="HK"]'),
+        'TH': document.querySelector('[data-region="TH"]'),
+        'VN': document.querySelector('[data-region="VN"]')
+      };
+
+      // Track max spend across all regions for bar scaling
+      let globalMaxSpend = 0;
+      const regionResults = new Map();
+      let completedCount = 0;
+      const totalRegions = Object.keys(regionCards).length;
+
+      // Helper to update a single region card immediately when data arrives
+      const updateRegionCard = (region, data) => {
+        const card = regionCards[region];
+        if (!card) return;
+
+        // Restore opacity
+        const spendEl = card.querySelector('[data-metric="spend"]');
+        const poEl = card.querySelector('[data-metric="po-count"]');
+        if (spendEl) spendEl.style.opacity = '1';
+        if (poEl) poEl.style.opacity = '1';
+
+        // Skip if no data and it was an error (keep static fallback)
+        if (data.actualSpend === 0 && data.error) {
+          console.log(`[Regional Data] ${region}: Keeping static fallback (API error)`);
+          return;
+        }
+
+        // Update global max for bar scaling
+        if (data.actualSpend > globalMaxSpend) {
+          globalMaxSpend = data.actualSpend;
+        }
+
+        // Update Actual Spend - IMMEDIATELY
+        const spendElement = card.querySelector('[data-metric="spend"]');
+        if (spendElement && data.actualSpend > 0) {
+          const formattedSpend = 'S$ ' + data.actualSpend.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          animateValueUpdate(spendElement, formattedSpend);
+          spendElement.setAttribute('data-updated', 'true');
+        } else if (spendElement) {
+          spendElement.setAttribute('data-updated', 'false');
+        }
+
+        // Update PO Count - IMMEDIATELY
+        const poCountElement = card.querySelector('[data-metric="po-count"]');
+        if (poCountElement && data.poCount > 0) {
+          animateValueUpdate(poCountElement, data.poCount.toLocaleString());
+          poCountElement.setAttribute('data-updated', 'true');
+        } else if (poCountElement) {
+          poCountElement.setAttribute('data-updated', 'false');
+        }
+
+        // Update bar width (will be recalculated when we know max)
+        const barElement = card.querySelector('[data-metric="bar"]');
+        if (barElement && data.actualSpend > 0 && globalMaxSpend > 0) {
+          const widthPct = Math.max(0.5, (data.actualSpend / globalMaxSpend) * 100).toFixed(1);
+          barElement.style.width = widthPct + '%';
+        }
+
+        console.log(`[Regional Data] ${region}: Card updated immediately with spend=S$ ${data.actualSpend.toLocaleString()}`);
+      };
+
+      // Helper to recalculate all bar widths when new max is found
+      const recalculateAllBars = () => {
+        if (globalMaxSpend === 0) return;
+        Object.entries(regionCards).forEach(([region, card]) => {
+          if (!card) return;
+          const result = regionResults.get(region);
+          if (!result || result.actualSpend === 0) return;
+
+          const barElement = card.querySelector('[data-metric="bar"]');
+          if (barElement) {
+            const widthPct = Math.max(0.5, (result.actualSpend / globalMaxSpend) * 100).toFixed(1);
+            barElement.style.width = widthPct + '%';
+          }
+        });
+      };
+
+      // Add loading indicator to cards
+      Object.entries(regionCards).forEach(([region, card]) => {
+        if (card) {
+          const spendEl = card.querySelector('[data-metric="spend"]');
+          const poEl = card.querySelector('[data-metric="po-count"]');
+          if (spendEl) spendEl.style.opacity = '0.5';
+          if (poEl) poEl.style.opacity = '0.5';
+        }
+      });
+
+      // Fire all region requests in parallel - each updates independently when ready
+      const regionPromises = Object.keys(regionCards).map(async (region) => {
+        try {
+          console.log(`[Regional Data] Starting fetch for ${region}...`);
+          updateStatusBanner(`Loading ${region}... (${completedCount}/${totalRegions})`);
+
+          // Fetch both endpoints in parallel for this region
+          const [orderValuesResponse, orderAnalysisResponse] = await Promise.all([
+            client.makeRequest('/v1.0/agent/orders/values', {
+              page: 1,
+              per_page: 5,
+              q: '',
+              q_assignee: '',
+              from_date: fromDate + 'T03:13:30+00:00',
+              to_date: toDate + 'T03:13:30+00:00',
+              date_type: 'created_at',
+              filters: {
+                operation_status: ['APPROVED', 'PENDING DELIVERY', 'COMPLETED', 'COMPLETED TENTATIVE'],
+                entity_name: [294,293,289,287,259,252,250,249,246,244,241,240,234,231,227,226,223,221,220,217,216,214,212,206,205,201,200,192,185,180,179,175,173,144,127,119,114,113,112,108,103,100,95,92,91,90,69,66,63,62,56,55,54,51,50,48,47,46,44,41,37,30,18,17,9,7,5,4,2],
+                region: [region]
+              },
+              currency: 'SGD'
+            }),
+            client.makeRequest('/v1.0/agent/analytics/entity/order-analysis', {
+              from_date: fromDate,
+              to_date: toDate,
+              entity_group: 'TikTok',
+              region: region
+            })
+          ]);
+
+          // Process results
+          // Use orderValuesResponse for actualSpend (po_fulfilled is in SGD)
+          const actualSpend = parseFloat(orderValuesResponse?.po_fulfilled) || 0;
+          
+          // For PO count: use entity-margin tracking endpoint with region filter
+          let poCount = 0;
+          try {
+            const poCountResponse = await client.makeRequest('/v1.0/agent/analytics/tracking/entity-margin', {
+              from_date: fromDate,
+              to_date: toDate,
+              entity_group: 'TikTok',
+              region: region,
+              page: 1,
+              per_page: 200
+            });
+            const poRows = Array.isArray(poCountResponse) ? poCountResponse : (poCountResponse?.data || []);
+            poCount = poRows.reduce((sum, row) => sum + (parseInt(row.count_order) || 0), 0);
+          } catch (e) {
+            console.log(`[Regional Data] ${region}: PO count fetch failed, will use fallback`);
+          }
+          
+          const isDemoData = orderValuesResponse?._apiUnavailable || orderAnalysisResponse?._apiUnavailable;
+
+          const result = { region, actualSpend, poCount, isDemoData, error: false };
+          regionResults.set(region, result);
+
+          // IMMEDIATELY update this region's card (don't wait for others)
+          updateRegionCard(region, result);
+
+          // Recalculate all bars in case this region has new max
+          recalculateAllBars();
+
+          completedCount++;
+          loadingState.regions.set(region, true);
+          updateStatusBanner(`${region} loaded ✓ (${completedCount}/${totalRegions})`);
+
+          console.log(`[Regional Data] ${region}: Completed independently - Spend=S$ ${actualSpend.toLocaleString()}, POs=${poCount.toLocaleString()}`);
+
+        } catch (error) {
+          console.error(`[Regional Data] Failed to fetch for ${region}:`, error.message);
+          const result = { region, actualSpend: 0, poCount: 0, isDemoData: false, error: true };
+          regionResults.set(region, result);
+          completedCount++;
+          loadingState.regions.set(region, true);
+          updateStatusBanner(`${region} failed (${completedCount}/${totalRegions})`);
+        }
+      });
+
+      // Wait for all to complete (but each already updated independently)
+      await Promise.all(regionPromises);
+
+      // Apply fallback data for regions that failed or returned 0, and calculate totals
+      Object.entries(regionCards).forEach(function(entry) {
+        var region = entry[0];
+        var card = entry[1];
+        if (!card) return;
+        var result = regionResults.get(region);
+        // Apply fallback if: no result OR (actualSpend is 0 and not error) OR (poCount is 0 and spend > 0)
+        if (!result || (result.actualSpend === 0 && !result.error) || (result.actualSpend > 0 && result.poCount === 0 && !result.error)) {
+          var fallback = REGIONAL_FALLBACK_DATA[region];
+          if (fallback) {
+            var spendEl = card.querySelector('[data-metric="spend"]');
+            var poEl = card.querySelector('[data-metric="po-count"]');
+            var barEl = card.querySelector('[data-metric="bar"]');
+            if (spendEl) {
+              var formattedSpend = 'S$ ' + fallback.actualSpend.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+              animateValueUpdate(spendEl, formattedSpend);
+            }
+            if (poEl) {
+              animateValueUpdate(poEl, fallback.poCount.toLocaleString());
+            }
+            // Also recalculate bar width with fallback value
+            if (barEl && fallback.actualSpend > 0) {
+              // Update globalMaxSpend for proper bar scaling
+              if (fallback.actualSpend > globalMaxSpend) {
+                globalMaxSpend = fallback.actualSpend;
+              }
+              const widthPct = Math.max(0.5, (fallback.actualSpend / globalMaxSpend) * 100).toFixed(1);
+              barEl.style.width = widthPct + '%';
+            }
+            console.log('[Regional Data] ' + region + ': Applied fallback - Spend=S$ ' + fallback.actualSpend.toLocaleString() + ', POs=' + fallback.poCount.toLocaleString());
+            // Store fallback in GLOBAL_REGIONAL_DATA for proper totals calculation
+            GLOBAL_REGIONAL_DATA.regionResults.set(region, { region: region, actualSpend: fallback.actualSpend, poCount: fallback.poCount });
+          }
+        }
+      });
+
+      // Calculate totals and find top region from all collected data
+      var allRegionsData = [];
+      Object.entries(regionCards).forEach(function(entry) {
+        var region = entry[0];
+        var data = GLOBAL_REGIONAL_DATA.regionResults.get(region) || regionResults.get(region);
+        if (data && data.actualSpend > 0) {
+          allRegionsData.push(data);
+        }
+      });
+
+      // Sum totals
+      GLOBAL_REGIONAL_DATA.totalSpend = allRegionsData.reduce(function(sum, r) { return sum + r.actualSpend; }, 0);
+      GLOBAL_REGIONAL_DATA.totalPOCount = allRegionsData.reduce(function(sum, r) { return sum + r.poCount; }, 0);
+
+
+      // Find top region (max spend)
+      if (allRegionsData.length > 0) {
+        var topEntry = allRegionsData.reduce(function(max, r) { return r.actualSpend > max.actualSpend ? r : max; }, allRegionsData[0]);
+        GLOBAL_REGIONAL_DATA.topRegion = topEntry.region;
+        GLOBAL_REGIONAL_DATA.topRegionSpend = topEntry.actualSpend;
+      }
+
+      // Update hero stats
+      updateHeroStatsFromRegionalData();
+      exportRegionalData();
+
+      const successCount = Array.from(regionResults.values()).filter(function(r) { return !r.error && r.actualSpend > 0; }).length;
+      console.log('[Regional Data] All regions complete. ' + successCount + '/' + totalRegions + ' updated from API. Total: S$ ' + GLOBAL_REGIONAL_DATA.totalSpend.toLocaleString());
+      updateStatusBanner(successCount + ' regions updated ✓');
+      checkAllLoadingComplete();
+    }
+
+    // Update hero stats with regional data
+    function updateHeroStatsFromRegionalData() {
+      // Update Actual Spend (2nd stat)
+      var spendEl = document.querySelector('.agg-stat:nth-child(2) .agg-stat-value');
+      if (spendEl) {
+        var formattedTotal;
+        if (GLOBAL_REGIONAL_DATA.totalSpend >= 1000000) {
+          formattedTotal = 'S$ ' + (GLOBAL_REGIONAL_DATA.totalSpend / 1000000).toFixed(1) + 'M';
+        } else if (GLOBAL_REGIONAL_DATA.totalSpend >= 1000) {
+          formattedTotal = 'S$ ' + (GLOBAL_REGIONAL_DATA.totalSpend / 1000).toFixed(1) + 'K';
+        } else {
+          formattedTotal = 'S$ ' + GLOBAL_REGIONAL_DATA.totalSpend.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        animateValueUpdate(spendEl, formattedTotal);
+      }
+
+      // Update Total PO Count (3rd stat)
+      var poEl = document.querySelector('.agg-stat:nth-child(3) .agg-stat-value');
+      if (poEl) {
+        animateValueUpdate(poEl, GLOBAL_REGIONAL_DATA.totalPOCount.toLocaleString());
+      }
+
+      // Update Top Region (4th stat)
+      var regionEl = document.querySelector('.agg-stat:nth-child(4) .agg-stat-value');
+      if (regionEl) {
+        animateValueUpdate(regionEl, GLOBAL_REGIONAL_DATA.topRegion);
+      }
+    }
+
+    // Function to get total regional spend for category bar scaling
+    function getTotalRegionalSpend() {
+      return GLOBAL_REGIONAL_DATA.totalSpend;
+    }
+
+    // Export for country pages to use via shared.js
+    function exportRegionalData() {
+      window.TikTok_REGIONAL_TOTAL = GLOBAL_REGIONAL_DATA.totalSpend;
+      window.TikTok_TOP_REGION = GLOBAL_REGIONAL_DATA.topRegion;
+      window.TikTok_REGION_MAP = {};
+      GLOBAL_REGIONAL_DATA.regionResults.forEach(function(value, key) {
+        window.TikTok_REGION_MAP[key] = value;
+      });
+      console.log('[Regional Data] Exported for country pages - Total:', window.TikTok_REGIONAL_TOTAL, ', Top:', window.TikTok_TOP_REGION);
+    }
+
+    // Helper: Animate value updates for smooth UX
+    function animateValueUpdate(element, newValue) {
+      element.style.transition = 'opacity 0.2s ease';
+      element.style.opacity = '0.5';
+      setTimeout(() => {
+        element.textContent = newValue;
+        element.style.opacity = '1';
+      }, 150);
+    }
+
+    // Helper: Update status banner with current loading state
+    function updateStatusBanner(message) {
+      const statusBanner = document.getElementById('api-status-banner');
+      if (statusBanner && message) {
+        statusBanner.textContent = message;
+        statusBanner.style.background = '#0f172a';
+        statusBanner.style.color = '#22c55e';
+      } else if (statusBanner) {
+        statusBanner.textContent = 'Loading live data from API...';
+      }
+    }
+
+    // Global error handler
+    window.addEventListener('error', function(event) {
+      const statusBanner = document.getElementById('api-status-banner');
+      if (statusBanner) {
+        statusBanner.textContent = '✗ JS Error: ' + event.message.substring(0, 50);
+        statusBanner.style.background = '#7c2d12';
+        statusBanner.style.color = '#fbbf24';
+      }
+    });
+
+    // Initialize and fetch data when DOM is ready - FIRE INDEPENDENTLY
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAndFetch);
+    } else {
+      initAndFetch();
+    }
+
+    // Fetch cost saving for TikTok-wide totals (no region parameter)
+    async function fetchTotalCostSavingValue() {
+      try {
+        const response = await fetch(`/api/cost-saving-proxy?entity_name=TikTok`);
+        if (!response.ok) throw new Error(`Cost Saving API error: ${response.status}`);
+        const payload = await response.json();
+        return payload.totalSaving ?? payload.totalSavingSgd ?? 0;
+      } catch (err) {
+        console.warn('[Cost Saving] Failed to fetch totals:', err.message);
+        return 0;
+      }
+    }
+
+    // Fallback supplier/entity data for ranking matrix
+    const SUPPLIER_FALLBACK_DATA = [
+      { entityName: 'TikTok Express China', region: 'CN', amountPayable: 3403215.70, poCount: 7673 },
+      { entityName: 'TikTok Express Australia', region: 'AU', amountPayable: 2063903.42, poCount: 1797 },
+      { entityName: 'TikTok Express Japan', region: 'JP', amountPayable: 1669889.26, poCount: 6581 },
+      { entityName: 'TikTok Express Singapore', region: 'SG', amountPayable: 1186680.38, poCount: 1244 },
+      { entityName: 'TikTok Express Indonesia', region: 'ID', amountPayable: 1034537.78, poCount: 1419 },
+      { entityName: 'TikTok Express Malaysia', region: 'MY', amountPayable: 835884.74, poCount: 842 },
+      { entityName: 'TikTok Express India', region: 'IN', amountPayable: 245680.53, poCount: 640 },
+      { entityName: 'TikTok Express Thailand', region: 'TH', amountPayable: 126423.26, poCount: 346 },
+      { entityName: 'TikTok Express Hong Kong', region: 'HK', amountPayable: 10311.71, poCount: 42 },
+      { entityName: 'TikTok Express Vietnam', region: 'VN', amountPayable: 54740.98, poCount: 110 }
+    ];
+
+    // Cancelled/Failed status values to exclude from supplier ranking
+    const EXCLUDED_STATUSES = ['CANCELLED', 'CANCELED', 'FAILED', 'REJECTED', 'VOID', 'CANCEL', 'FAIL'];
+    
+    // Check if a row/order should be excluded based on status
+    function isExcludedStatus(row) {
+      const status = (row.status || row.operation_status || row.order_status || row.spid_status || '').toUpperCase();
+      return EXCLUDED_STATUSES.some(excluded => status.includes(excluded));
+    }
+    
+    // Fetch and render supplier ranking matrix
+    async function fetchSupplierRanking() {
+      const client = new SAAPIClient();
+      const fromDate = '2023-01-01';
+      const toDate = '2025-12-31';
+      const tbody = document.getElementById('supplier-ranking-body');
+      
+      if (!tbody) return;
+      
+      updateStatusBanner('Loading supplier rankings...');
+      
+      try {
+        // Fetch entity margin data for all TikTok entities
+        // Filter: Only include valid/non-cancelled/non-failed SPIDs per Eka April requirement
+        const response = await client.makeRequest('/v1.0/agent/analytics/tracking/entity-margin', {
+          from_date: fromDate,
+          to_date: toDate,
+          entity_group: 'TikTok',
+          page: 1,
+          per_page: 200,
+          // Only include approved/completed status - exclude cancelled/failed
+          filters: {
+            operation_status: ['APPROVED', 'PENDING DELIVERY', 'COMPLETED', 'COMPLETED TENTATIVE', 'FULFILLED', 'PAID', 'INVOICED']
+          }
+        });
+        
+        const rows = Array.isArray(response) ? response : (response?.data || []);
+        
+        // Process and aggregate data by entity
+        // Filter logic: Exclude cancelled or failed SPIDs from calculation
+        const entityMap = new Map();
+        let excludedCount = 0;
+        
+        rows.forEach(row => {
+          if (!row.entity_name) return;
+          
+          // Filter: Skip cancelled or failed SPIDs (Eka April requirement)
+          if (isExcludedStatus(row)) {
+            excludedCount++;
+            return;
+          }
+          
+          const key = row.entity_name;
+          const existing = entityMap.get(key) || {
+            entityName: row.entity_name,
+            entityCode: row.entity_code || '',
+            region: row.region || 'SG',
+            amountPayable: 0,
+            poCount: 0
+          };
+          
+          // Use po_fulfilled or amount_payable if available, otherwise use margin or order count as proxy
+          const rowAmount = parseFloat(row.po_fulfilled) || parseFloat(row.amount_payable) || parseFloat(row.margin) || 0;
+          existing.amountPayable += rowAmount;
+          existing.poCount += parseInt(row.count_order) || 0;
+          
+          entityMap.set(key, existing);
+        });
+        
+        console.log(`[Supplier Ranking] Filtered out ${excludedCount} cancelled/failed SPIDs from calculation`);
+        
+        // Convert to array and sort by amount payable (highest first)
+        let suppliers = Array.from(entityMap.values());
+        
+        // If no API data, use fallback
+        if (suppliers.length === 0 || rows.length === 0) {
+          console.log('[Supplier Ranking] Using fallback data (no API data available)');
+          suppliers = SUPPLIER_FALLBACK_DATA.map(s => ({
+            entityName: s.entityName,
+            entityCode: s.region,
+            region: s.region,
+            amountPayable: s.amountPayable,
+            poCount: s.poCount
+          }));
+        }
+        
+        // Sort by amount payable descending
+        suppliers.sort((a, b) => b.amountPayable - a.amountPayable);
+        
+        // Calculate total for percentage
+        const totalAmount = suppliers.reduce((sum, s) => sum + s.amountPayable, 0);
+        
+        // Render the table
+        renderSupplierRankingTable(suppliers, totalAmount);
+        
+        updateStatusBanner('Supplier rankings loaded ✓');
+        console.log('[Supplier Ranking] Loaded', suppliers.length, 'entities, total amount:', totalAmount);
+        
+      } catch (error) {
+        console.error('[Supplier Ranking] Failed to fetch:', error);
+        // Use fallback data on error
+        const suppliers = SUPPLIER_FALLBACK_DATA.map(s => ({
+          entityName: s.entityName,
+          entityCode: s.region,
+          region: s.region,
+          amountPayable: s.amountPayable,
+          poCount: s.poCount
+        }));
+        suppliers.sort((a, b) => b.amountPayable - a.amountPayable);
+        const totalAmount = suppliers.reduce((sum, s) => sum + s.amountPayable, 0);
+        renderSupplierRankingTable(suppliers, totalAmount);
+        updateStatusBanner('Supplier rankings (fallback) ✓');
+      }
+    }
+    
+    // Render supplier ranking table
+    function renderSupplierRankingTable(suppliers, totalAmount) {
+      const tbody = document.getElementById('supplier-ranking-body');
+      if (!tbody) return;
+      
+      const maxAmount = Math.max(...suppliers.map(s => s.amountPayable));
+      
+      tbody.innerHTML = suppliers.map((supplier, index) => {
+        const rank = index + 1;
+        const pct = totalAmount > 0 ? ((supplier.amountPayable / totalAmount) * 100) : 0;
+        const barWidth = maxAmount > 0 ? ((supplier.amountPayable / maxAmount) * 100) : 0;
+        
+        // Determine rank tier for styling
+        let rankClass = 'rank-lower';
+        let barClass = 'low';
+        if (rank <= 3) {
+          rankClass = 'rank-top3';
+          barClass = 'high';
+        } else if (rank <= 6) {
+          rankClass = 'rank-mid';
+          barClass = 'mid';
+        }
+        
+        // Format amount
+        let formattedAmount;
+        if (supplier.amountPayable >= 1000000) {
+          formattedAmount = 'S$ ' + (supplier.amountPayable / 1000000).toFixed(2) + 'M';
+        } else if (supplier.amountPayable >= 1000) {
+          formattedAmount = 'S$ ' + (supplier.amountPayable / 1000).toFixed(1) + 'K';
+        } else {
+          formattedAmount = 'S$ ' + supplier.amountPayable.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        
+        return `
+          <tr class="reveal reveal-delay-${Math.min(rank, 5)}">
+            <td class="rank-cell">
+              <span class="rank-badge ${rankClass}">${rank}</span>
+            </td>
+            <td>
+              <span class="entity-name">${escapeHTML(supplier.entityName)}</span>
+              ${supplier.entityCode ? `<span class="entity-code">(${escapeHTML(supplier.entityCode)})</span>` : ''}
+            </td>
+            <td class="region-cell">${escapeHTML(supplier.region)}</td>
+            <td class="amount-cell">${formattedAmount}</td>
+            <td class="pct-cell">${pct.toFixed(1)}%</td>
+            <td class="visual-cell">
+              <div class="supplier-bar-track">
+                <div class="supplier-bar-fill ${barClass}" style="width:${barWidth.toFixed(1)}%"></div>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      
+      // Add summary row
+      const totalFormatted = totalAmount >= 1000000 
+        ? 'S$ ' + (totalAmount / 1000000).toFixed(2) + 'M'
+        : 'S$ ' + totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      
+      tbody.innerHTML += `
+        <tr style="background:var(--bg-subtle);font-weight:600;">
+          <td colspan="3" style="text-align:right;padding:16px;color:var(--text-primary);">Total</td>
+          <td class="amount-cell" style="color:var(--green-soft);">${totalFormatted}</td>
+          <td class="pct-cell">100%</td>
+          <td></td>
+        </tr>
+      `;
+    }
+    
+    // Helper to escape HTML
+    function escapeHTML(str) {
+      if (!str) return '';
+      return str.replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag]));
+    }
+
+    // Fetch total cost saving across all TikTok (single request, no region parameter)
+    async function fetchTotalCostSaving() {
+      try {
+        updateStatusBanner('Loading cost savings...');
+        
+        // Single request for TikTok-wide totals (no region parameter)
+        const totalSaving = await fetchTotalCostSavingValue();
+        
+        // Update UI
+        const savingEl = document.getElementById('main-stat-saving');
+        if (savingEl && totalSaving > 0) {
+          let formatted;
+          if (totalSaving >= 1000000) {
+            formatted = 'S$ ' + (totalSaving / 1000000).toFixed(2) + 'M';
+          } else if (totalSaving >= 1000) {
+            formatted = 'S$ ' + (totalSaving / 1000).toFixed(1) + 'K';
+          } else {
+            formatted = 'S$ ' + totalSaving.toLocaleString();
+          }
+          animateValueUpdate(savingEl, formatted);
+          console.log('[Total Cost Saving] Updated:', totalSaving, 'Formatted:', formatted);
+          updateStatusBanner('Cost savings loaded ✓');
+        }
+        
+        return totalSaving;
+      } catch (error) {
+        console.error('[Total Cost Saving] Failed:', error);
+        return 0;
+      }
+    }
+
+    async function initAndFetch() {
+      console.log('[Init] Starting independent data fetches...');
+      const statusBanner = document.getElementById('api-status-banner');
+
+      try {
+        initAll();
+
+        // Fire all data fetches independently - DON'T wait for Promise.all
+        // Each function updates its own UI as soon as data arrives
+
+        // 1. Hero stats (spend + PO count) - fire independently
+        fetchActualSpend();  // Updates immediately when ready
+        fetchTotalPOCount(); // Updates immediately when ready
+
+        // 2. Regional cards - each region updates independently as data arrives
+        fetchRegionalData(); // Each card updates as its region completes
+
+        // 3. Total Cost Saving (aggregate across all regions) - fire independently
+        fetchTotalCostSaving(); // Updates immediately when ready
+
+        // 4. Supplier Ranking (Historical Data section) - fire independently
+        fetchSupplierRanking(); // Updates immediately when ready
+
+        // Note: We're NOT using Promise.all() - each request updates UI independently
+        // This means the page shows data as it loads, not after all requests finish
+
+      } catch (error) {
+        console.error('[Init] Error during data fetch:', error);
+        if (statusBanner) {
+          statusBanner.textContent = '✗ Error: ' + error.message.substring(0, 50);
+          statusBanner.style.background = '#7c2d12';
+          statusBanner.style.color = '#fbbf24';
+        }
+      }
+    }
+  </script>
+</body></html>

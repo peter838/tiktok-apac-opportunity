@@ -1,0 +1,47 @@
+{
+  "sg": {
+    "observed_total_k": 112.5,
+    "potential_total_k": 900.0,
+    "gap_total_k": 725.1
+  },
+  "cn": {
+    "observed_total_k": 597.6,
+    "potential_total_k": 4500.0,
+    "gap_total_k": 3486.4
+  },
+  "jp": {
+    "observed_total_k": 475.7,
+    "potential_total_k": 3500.0,
+    "gap_total_k": 2896.2
+  },
+  "au": {
+    "observed_total_k": 317.3,
+    "potential_total_k": 2200.0,
+    "gap_total_k": 1713.9
+  },
+  "my": {
+    "observed_total_k": 341.7,
+    "potential_total_k": 1800.0,
+    "gap_total_k": 1441.2
+  },
+  "id": {
+    "observed_total_k": 152.9,
+    "potential_total_k": 1300.0,
+    "gap_total_k": 1103.0
+  },
+  "in": {
+    "observed_total_k": 142.4,
+    "potential_total_k": 1800.0,
+    "gap_total_k": 1613.5
+  },
+  "th": {
+    "observed_total_k": 4.1,
+    "potential_total_k": 500.0,
+    "gap_total_k": 487.7
+  },
+  "hk": {
+    "observed_total_k": 1.9,
+    "potential_total_k": 150.0,
+    "gap_total_k": 146.7
+  }
+}
