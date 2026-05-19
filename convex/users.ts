@@ -25,48 +25,78 @@ const countryCode = v.union(
   v.literal("th"),
 );
 
-// Get all users
+const entity = v.union(
+  v.literal("dhl"),
+  v.literal("tiktok"),
+);
+
+// Helper: resolve entity for backward compatibility (old data = dhl)
+function resolveEntity(e: string | undefined): string {
+  return e || "dhl";
+}
+
+function matchesEntity(docEntity: string | undefined, filterEntity: string | undefined): boolean {
+  return resolveEntity(docEntity) === resolveEntity(filterEntity);
+}
+
+// Get all users for an entity
 export const listUsers = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    entity: v.optional(entity),
+  },
+  handler: async (ctx, args) => {
     const users = await ctx.db.query("users").collect();
-    return users.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    const filtered = users.filter((u) => matchesEntity(u.entity, args.entity));
+    return filtered.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   },
 });
 
-// Get users by status
+// Get users by status for an entity
 export const listUsersByStatus = query({
-  args: { status: userStatus },
+  args: {
+    status: userStatus,
+    entity: v.optional(entity),
+  },
   handler: async (ctx, args) => {
     const users = await ctx.db
       .query("users")
       .withIndex("by_status", (q) => q.eq("status", args.status))
       .collect();
-    return users.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    const filtered = users.filter((u) => matchesEntity(u.entity, args.entity));
+    return filtered.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   },
 });
 
-// Get user by email
+// Get user by email for an entity
 export const getUserByEmail = query({
-  args: { email: v.string() },
+  args: {
+    email: v.string(),
+    entity: v.optional(entity),
+  },
   handler: async (ctx, args) => {
     const user = await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", args.email))
       .first();
-    return user || null;
+    if (!user) return null;
+    return matchesEntity(user.entity, args.entity) ? user : null;
   },
 });
 
 // Get user by ID
 export const getUserById = query({
-  args: { id: v.id("users") },
+  args: {
+    id: v.id("users"),
+    entity: v.optional(entity),
+  },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.id);
+    const user = await ctx.db.get(args.id);
+    if (!user) return null;
+    return matchesEntity(user.entity, args.entity) ? user : null;
   },
 });
 
-// Create a new user
+// Create a new user for an entity
 export const createUser = mutation({
   args: {
     email: v.string(),
@@ -75,22 +105,26 @@ export const createUser = mutation({
     status: v.optional(userStatus),
     countries: v.optional(v.array(countryCode)),
     createdBy: v.optional(v.string()),
+    entity: v.optional(entity),
   },
   handler: async (ctx, args) => {
-    // Check if user already exists
+    const targetEntity = resolveEntity(args.entity);
+
+    // Check if user already exists for this entity
     const existing = await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", args.email))
       .first();
 
-    if (existing) {
-      throw new Error(`User with email ${args.email} already exists`);
+    if (existing && matchesEntity(existing.entity, args.entity)) {
+      throw new Error(`User with email ${args.email} already exists for ${targetEntity}`);
     }
 
     const now = Date.now();
     const userId = await ctx.db.insert("users", {
       email: args.email,
       name: args.name,
+      entity: targetEntity,
       role: args.role,
       status: args.status || "active",
       countries: args.countries || [],
@@ -107,6 +141,7 @@ export const createUser = mutation({
 export const updateUser = mutation({
   args: {
     id: v.id("users"),
+    entity: v.optional(entity),
     email: v.optional(v.string()),
     name: v.optional(v.string()),
     role: v.optional(userRole),
@@ -118,6 +153,9 @@ export const updateUser = mutation({
     if (!user) {
       throw new Error("User not found");
     }
+    if (!matchesEntity(user.entity, args.entity)) {
+      throw new Error(`User does not belong to ${resolveEntity(args.entity)}`);
+    }
 
     // Check email uniqueness if changing email
     if (args.email && args.email !== user.email) {
@@ -125,8 +163,8 @@ export const updateUser = mutation({
         .query("users")
         .withIndex("by_email", (q) => q.eq("email", args.email))
         .first();
-      if (existing) {
-        throw new Error(`User with email ${args.email} already exists`);
+      if (existing && matchesEntity(existing.entity, args.entity)) {
+        throw new Error(`User with email ${args.email} already exists for ${resolveEntity(args.entity)}`);
       }
     }
 
@@ -154,11 +192,17 @@ export const updateUser = mutation({
 
 // Delete user
 export const deleteUser = mutation({
-  args: { id: v.id("users") },
+  args: {
+    id: v.id("users"),
+    entity: v.optional(entity),
+  },
   handler: async (ctx, args) => {
     const user = await ctx.db.get(args.id);
     if (!user) {
       return { ok: false, deleted: false, error: "User not found" };
+    }
+    if (!matchesEntity(user.entity, args.entity)) {
+      return { ok: false, deleted: false, error: `User does not belong to ${resolveEntity(args.entity)}` };
     }
 
     await ctx.db.delete(args.id);
@@ -168,14 +212,17 @@ export const deleteUser = mutation({
 
 // Record user login
 export const recordLogin = mutation({
-  args: { email: v.string() },
+  args: {
+    email: v.string(),
+    entity: v.optional(entity),
+  },
   handler: async (ctx, args) => {
     const user = await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", args.email))
       .first();
 
-    if (!user) {
+    if (!user || !matchesEntity(user.entity, args.entity)) {
       return { ok: false, error: "User not found" };
     }
 
@@ -188,20 +235,23 @@ export const recordLogin = mutation({
   },
 });
 
-// Get user stats
+// Get user stats for an entity
 export const getUserStats = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    entity: v.optional(entity),
+  },
+  handler: async (ctx, args) => {
     const users = await ctx.db.query("users").collect();
-    
+    const filtered = users.filter((u) => matchesEntity(u.entity, args.entity));
+
     return {
-      total: users.length,
-      active: users.filter(u => u.status === "active").length,
-      inactive: users.filter(u => u.status === "inactive").length,
-      pending: users.filter(u => u.status === "pending").length,
-      admins: users.filter(u => u.role === "admin").length,
-      editors: users.filter(u => u.role === "editor").length,
-      viewers: users.filter(u => u.role === "viewer").length,
+      total: filtered.length,
+      active: filtered.filter((u) => u.status === "active").length,
+      inactive: filtered.filter((u) => u.status === "inactive").length,
+      pending: filtered.filter((u) => u.status === "pending").length,
+      admins: filtered.filter((u) => u.role === "admin").length,
+      editors: filtered.filter((u) => u.role === "editor").length,
+      viewers: filtered.filter((u) => u.role === "viewer").length,
     };
   },
 });
@@ -211,21 +261,24 @@ export const seedInitialAdmin = mutation({
   args: {
     email: v.string(),
     name: v.string(),
+    entity: v.optional(entity),
   },
   handler: async (ctx, args) => {
+    const targetEntity = resolveEntity(args.entity);
     const existing = await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", args.email))
       .first();
 
-    if (existing) {
-      return { ok: false, message: "Admin user already exists" };
+    if (existing && matchesEntity(existing.entity, args.entity)) {
+      return { ok: false, message: "Admin user already exists for this entity" };
     }
 
     const now = Date.now();
     const userId = await ctx.db.insert("users", {
       email: args.email,
       name: args.name,
+      entity: targetEntity,
       role: "admin",
       status: "active",
       countries: ["cn", "jp", "au", "my", "id", "in", "sg", "hk", "th"],

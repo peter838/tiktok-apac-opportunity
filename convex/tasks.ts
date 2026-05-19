@@ -20,6 +20,11 @@ const taskStatus = v.union(
   v.literal("completed"),
 );
 
+const entity = v.union(
+  v.literal("dhl"),
+  v.literal("tiktok"),
+);
+
 type CountryCode = "cn" | "jp" | "au" | "my" | "id" | "in" | "sg" | "hk" | "th";
 type TaskStatus = "not started" | "in progress" | "completed";
 
@@ -30,15 +35,30 @@ function normalizeStatus(status: string | undefined): TaskStatus {
   return "in progress";
 }
 
+// Helper: resolve entity for backward compatibility (old data = dhl)
+function resolveEntity(e: string | undefined): string {
+  return e || "dhl";
+}
+
+function matchesEntity(docEntity: string | undefined, filterEntity: string | undefined): boolean {
+  return resolveEntity(docEntity) === resolveEntity(filterEntity);
+}
+
 export const getTasksByCountry = query({
-  args: { countryCode },
+  args: {
+    countryCode,
+    entity: v.optional(entity),
+  },
   handler: async (ctx, args) => {
     const tasks = await ctx.db
       .query("tasks")
       .withIndex("by_country_and_id", (q) => q.eq("countryCode", args.countryCode))
       .collect();
 
-    const sorted = tasks.sort((a, b) => a.id - b.id);
+    // Filter by entity for data isolation between dashboards
+    const filtered = tasks.filter((t) => matchesEntity(t.entity, args.entity));
+
+    const sorted = filtered.sort((a, b) => a.id - b.id);
     const nextId = sorted.reduce((max, task) => Math.max(max, task.id), 0) + 1;
 
     return {
@@ -50,10 +70,16 @@ export const getTasksByCountry = query({
 });
 
 export const getAllTasks = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    entity: v.optional(entity),
+  },
+  handler: async (ctx, args) => {
     const tasks = await ctx.db.query("tasks").collect();
-    return tasks.sort((a, b) => {
+
+    // Filter by entity for data isolation
+    const filtered = tasks.filter((t) => matchesEntity(t.entity, args.entity));
+
+    return filtered.sort((a, b) => {
       if (a.countryCode === b.countryCode) return a.id - b.id;
       return a.countryCode.localeCompare(b.countryCode);
     });
@@ -69,6 +95,7 @@ export const createTask = mutation({
     deadline: v.string(),
     status: taskStatus,
     id: v.optional(v.number()),
+    entity: v.optional(entity),
   },
   handler: async (ctx, args) => {
     const latest = await ctx.db
@@ -83,6 +110,7 @@ export const createTask = mutation({
     return await ctx.db.insert("tasks", {
       id: args.id ?? nextId,
       countryCode: args.countryCode,
+      entity: args.entity || "dhl",
       date: args.date,
       description: args.description,
       owner: args.owner,
@@ -98,6 +126,7 @@ export const updateTask = mutation({
   args: {
     id: v.number(),
     countryCode,
+    entity: v.optional(entity),
     date: v.optional(v.string()),
     description: v.optional(v.string()),
     owner: v.optional(v.string()),
@@ -105,13 +134,16 @@ export const updateTask = mutation({
     status: v.optional(taskStatus),
   },
   handler: async (ctx, args) => {
-    const task = await ctx.db
+    const tasks = await ctx.db
       .query("tasks")
       .withIndex("by_country_and_id", (q) => q.eq("countryCode", args.countryCode).eq("id", args.id))
-      .first();
+      .collect();
+
+    // Find the task matching the entity (backward compatible: no entity = dhl)
+    const task = tasks.find((t) => matchesEntity(t.entity, args.entity));
 
     if (!task) {
-      throw new Error(`Task not found for ${args.countryCode}:${args.id}`);
+      throw new Error(`Task not found for ${resolveEntity(args.entity)}:${args.countryCode}:${args.id}`);
     }
 
     const patch: {
@@ -140,12 +172,16 @@ export const deleteTask = mutation({
   args: {
     id: v.number(),
     countryCode,
+    entity: v.optional(entity),
   },
   handler: async (ctx, args) => {
-    const task = await ctx.db
+    const tasks = await ctx.db
       .query("tasks")
       .withIndex("by_country_and_id", (q) => q.eq("countryCode", args.countryCode).eq("id", args.id))
-      .first();
+      .collect();
+
+    // Find the task matching the entity
+    const task = tasks.find((t) => matchesEntity(t.entity, args.entity));
 
     if (!task) {
       return { ok: false, deleted: false };
@@ -157,8 +193,11 @@ export const deleteTask = mutation({
 });
 
 export const seedTasks = mutation({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    entity: v.optional(entity),
+  },
+  handler: async (ctx, args) => {
+    const targetEntity = resolveEntity(args.entity);
     const now = Date.now();
     const countryCodes = Object.keys(COUNTRY_NAMES) as CountryCode[];
 
@@ -184,13 +223,16 @@ export const seedTasks = mutation({
         const existing = await ctx.db
           .query("tasks")
           .withIndex("by_country_and_id", (q) => q.eq("countryCode", code).eq("id", Number(task.id)))
-          .first();
+          .collect();
 
-        if (existing) continue;
+        // Check if a task with the same id already exists for this entity
+        const alreadyExists = existing.some((t) => matchesEntity(t.entity, args.entity));
+        if (alreadyExists) continue;
 
         await ctx.db.insert("tasks", {
           id: Number(task.id),
           countryCode: code,
+          entity: targetEntity,
           date: task.date || "",
           description: task.description || "",
           owner: task.owner || "",
@@ -209,5 +251,24 @@ export const seedTasks = mutation({
       tasksInserted,
       totalCountries: countryCodes.length,
     };
+  },
+});
+
+// Migration: set entity field on existing documents that don't have it
+export const migrateEntityField = mutation({
+  args: {
+    entity: entity,
+    table: v.union(v.literal("tasks"), v.literal("users")),
+  },
+  handler: async (ctx, args) => {
+    const docs = await ctx.db.query(args.table).collect();
+    let updated = 0;
+    for (const doc of docs) {
+      if (!doc.entity) {
+        await ctx.db.patch(doc._id, { entity: args.entity });
+        updated++;
+      }
+    }
+    return { ok: true, updated, total: docs.length };
   },
 });

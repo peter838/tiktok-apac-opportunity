@@ -1,5 +1,7 @@
 // === Shared utilities for TikTok Opportunity Intelligence ===
 
+const ENTITY = 'tiktok';
+
 const TASK_TRACKER_DATA = window.TikTok_TASK_TRACKER_DATA || {
   countries: {
     cn: 'China',
@@ -567,7 +569,7 @@ async function loadSharedTaskState(countryCode) {
   const convex = window.TikTokConvexClient;
   if (!convex?.isConfigured) return seedState;
   try {
-    const payload = await convex.query('tasks:getTasksByCountry', { countryCode });
+    const payload = await convex.query('tasks:getTasksByCountry', { countryCode, entity: ENTITY });
     return normalizeTaskState(countryCode, {
       nextId: Number(payload?.nextId) || seedState.nextId,
       tasks: Array.isArray(payload?.tasks) ? payload.tasks : seedState.tasks,
@@ -584,7 +586,7 @@ async function syncSharedTaskState(countryCode, state) {
   const convex = window.TikTokConvexClient;
   if (!convex?.isConfigured) return false;
   try {
-    const remote = await convex.query('tasks:getTasksByCountry', { countryCode });
+    const remote = await convex.query('tasks:getTasksByCountry', { countryCode, entity: ENTITY });
     const remoteMap = new Map((remote?.tasks || []).map((task) => [Number(task.id), task]));
     const localMap = new Map((state?.tasks || []).map((task) => [Number(task.id), task]));
 
@@ -593,6 +595,7 @@ async function syncSharedTaskState(countryCode, state) {
         await convex.mutation('tasks:deleteTask', {
           countryCode,
           id: Number(remoteTask.id),
+          entity: ENTITY,
         });
       }
     }
@@ -604,6 +607,7 @@ async function syncSharedTaskState(countryCode, state) {
         await convex.mutation('tasks:createTask', {
           countryCode,
           id,
+          entity: ENTITY,
           date: localTask.date || '',
           description: localTask.description || '',
           owner: localTask.owner || '',
@@ -623,6 +627,7 @@ async function syncSharedTaskState(countryCode, state) {
         await convex.mutation('tasks:updateTask', {
           countryCode,
           id,
+          entity: ENTITY,
           date: localTask.date || '',
           description: localTask.description || '',
           owner: localTask.owner || '',
@@ -907,6 +912,7 @@ function injectTaskTrackerSection(countryCode) {
       await window.TikTokConvexClient?.mutation('tasks:updateTask', {
         countryCode,
         id: Number(task.id),
+        entity: ENTITY,
         [field]: next,
       });
     } catch (error) {
@@ -957,6 +963,7 @@ function injectTaskTrackerSection(countryCode) {
         await window.TikTokConvexClient?.mutation('tasks:createTask', {
           countryCode,
           id: newTask.id,
+          entity: ENTITY,
           date: newTask.date,
           description: newTask.description,
           owner: newTask.owner,

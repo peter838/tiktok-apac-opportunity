@@ -31,10 +31,16 @@ const userStatus = v.union(
   v.literal("pending"),
 );
 
+const entity = v.union(
+  v.literal("dhl"),
+  v.literal("tiktok"),
+);
+
 export default defineSchema({
   tasks: defineTable({
     id: v.number(),
     countryCode,
+    entity: v.optional(entity),
     date: v.string(),
     description: v.string(),
     owner: v.string(),
@@ -54,6 +60,7 @@ export default defineSchema({
   users: defineTable({
     email: v.string(),
     name: v.string(),
+    entity: v.optional(entity),
     role: userRole,
     status: userStatus,
     countries: v.optional(v.array(countryCode)),
