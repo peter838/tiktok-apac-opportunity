@@ -1050,6 +1050,18 @@
       GLOBAL_REGIONAL_DATA.totalSpend = totalStaticSpend;
       GLOBAL_REGIONAL_DATA.totalPOCount = totalStaticOrders;
       
+      // Find top region from static data
+      let topRegion = '';
+      let topRegionSpend = 0;
+      Object.entries(STATIC_REGIONAL_DATA).forEach(([region, data]) => {
+        if (data.totalSpend > topRegionSpend) {
+          topRegionSpend = data.totalSpend;
+          topRegion = region;
+        }
+      });
+      GLOBAL_REGIONAL_DATA.topRegion = topRegion;
+      GLOBAL_REGIONAL_DATA.topRegionSpend = topRegionSpend;
+      
       // Update hero stats with static totals
       updateHeroStatsFromRegionalData();
       exportRegionalData();
