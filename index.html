@@ -618,84 +618,34 @@
       }
     }
 
-    // Fetch and display Total PO Count from SA API - INDEPENDENT UPDATE
+    // Fetch and display Total PO Count - STATIC (no API call)
     async function fetchTotalPOCount() {
-      const client = new SAAPIClient();
-      const fromDate = '2023-01-01';
-      const toDate = '2025-12-31';
-
-      // Update status immediately to show this specific request is loading
       updateStatusBanner('Loading PO count...');
-
       try {
-        // Fetch entity margin data for all regions to get TikTok data
-        const response = await client.makeRequest('/v1.0/agent/analytics/tracking/entity-margin', {
-          from_date: fromDate,
-          to_date: toDate,
-          entity_group: 'TikTok'
-        });
-
-        // Handle both array response and {data: array} response
-        const rows = Array.isArray(response) ? response : (response?.data || []);
-
-        // Filter rows where entity_group == "TikTok" and sum count_order
-        const totalPOCount = rows
-          .filter(row => row.entity_group === 'TikTok')
-          .reduce((sum, row) => sum + (parseInt(row.count_order) || 0), 0);
-
-        // Update the UI with the fetched total - IMMEDIATELY
+        // Use static data instead of API call
+        const totalPOCount = Object.values(STATIC_REGIONAL_DATA).reduce((sum, data) => sum + data.totalOrders, 0);
         const poCountElement = document.querySelector('.agg-stat:nth-child(3) .agg-stat-value');
-        if (poCountElement && totalPOCount > 0) {
+        if (poCountElement) {
           animateValueUpdate(poCountElement, totalPOCount.toLocaleString());
-          console.log('[Total PO Count] Updated from API:', totalPOCount);
-          updateStatusBanner('PO count loaded ✓');
-        } else {
-          console.log('[Total PO Count] Using fallback value (API returned 0 or element not found)');
+          console.log('[Total PO Count] Set from static data:', totalPOCount);
         }
+        updateStatusBanner('PO count loaded ✓');
       } catch (error) {
-        console.error('[Total PO Count] Failed to fetch from API:', error);
-        updateStatusBanner('PO count unavailable');
-        // Keep the static fallback value displayed
+        console.error('[Total PO Count] Error:', error);
       } finally {
         loadingState.poCount = true;
         checkAllLoadingComplete();
       }
     }
 
-    // Fetch and display Actual Spend from SA API - INDEPENDENT UPDATE
-    // Uses /api/v1.0/agent/orders/values endpoint with specific entity filters
+    // Fetch and display Actual Spend - STATIC (no API call)
     async function fetchActualSpend() {
-      const client = new SAAPIClient();
-
-      // Update status immediately to show this specific request is loading
       updateStatusBanner('Loading spend data...');
-
       try {
-        // Fetch order values data with specific filter criteria
-        // Entity IDs for TikTok entities: 294,293,289,287,259,252,250,249,246,244,241,240,234,231,227,226,223,221,220,217,216,214,212,206,205,201,200,192,185,180,179,175,173,144,127,119,114,113,112,108,103,100,95,92,91,90,69,66,63,62,56,55,54,51,50,48,47,46,44,41,37,30,18,17,9,7,5,4,2
-        const response = await client.makeRequest('/v1.0/agent/orders/values', {
-          page: 1,
-          per_page: 5,
-          q: '',
-          q_assignee: '',
-          from_date: '2023-01-01T03:13:30+00:00',
-          to_date: '2025-12-31T03:13:30+00:00',
-          date_type: 'created_at',
-          filters: {
-            operation_status: ['APPROVED', 'PENDING DELIVERY', 'COMPLETED', 'COMPLETED TENTATIVE'],
-            entity_name: [294,293,289,287,259,252,250,249,246,244,241,240,234,231,227,226,223,221,220,217,216,214,212,206,205,201,200,192,185,180,179,175,173,144,127,119,114,113,112,108,103,100,95,92,91,90,69,66,63,62,56,55,54,51,50,48,47,46,44,41,37,30,18,17,9,7,5,4,2]
-          },
-          currency: 'SGD'
-        });
-
-        // Use po_fulfilled value from response (already in SGD)
-        const totalSpend = parseFloat(response?.po_fulfilled) || 0;
-
-        // Update the UI with the fetched total - IMMEDIATELY
-        // Update both the nth-child selector and the ID for compatibility
+        // Use static data instead of API call
+        const totalSpend = Object.values(STATIC_REGIONAL_DATA).reduce((sum, data) => sum + data.totalSpend, 0);
         const spendElement = document.querySelector('.agg-stat:nth-child(2) .agg-stat-value') || document.getElementById('main-stat-spend');
-        if (spendElement && totalSpend > 0) {
-          // Format: S$ 11.7M for large values, S$ 1,234.56 for smaller
+        if (spendElement) {
           let formattedSpend;
           if (totalSpend >= 1000000) {
             formattedSpend = 'S$ ' + (totalSpend / 1000000).toFixed(1) + 'M';
@@ -705,29 +655,11 @@
             formattedSpend = 'S$ ' + totalSpend.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
           }
           animateValueUpdate(spendElement, formattedSpend);
-          console.log('[Actual Spend] Updated from API:', totalSpend, 'Formatted:', formattedSpend);
-          updateStatusBanner('Spend data loaded ✓');
-        } else {
-          // API returned 0 or empty - use expected fallback value
-          // Expected po_fulfilled value: 10999774.745391164 (S$ ~11.0M)
-          const fallbackSpend = 10999774.75;
-          const formattedFallback = 'S$ ' + (fallbackSpend / 1000000).toFixed(1) + 'M';
-          if (spendElement) {
-            animateValueUpdate(spendElement, formattedFallback);
-          }
-          console.log('[Actual Spend] Using fallback value:', fallbackSpend, 'Formatted:', formattedFallback);
-          updateStatusBanner('Spend data loaded (fallback) ✓');
+          console.log('[Actual Spend] Set from static data:', totalSpend, 'Formatted:', formattedSpend);
         }
+        updateStatusBanner('Spend data loaded ✓');
       } catch (error) {
-        console.error('[Actual Spend] Failed to fetch from API:', error);
-        updateStatusBanner('Spend data unavailable');
-        // Use fallback value on error
-        const spendElement = document.querySelector('.agg-stat:nth-child(2) .agg-stat-value') || document.getElementById('main-stat-spend');
-        if (spendElement) {
-          const fallbackSpend = 10999774.75;
-          const formattedFallback = 'S$ ' + (fallbackSpend / 1000000).toFixed(1) + 'M';
-          animateValueUpdate(spendElement, formattedFallback);
-        }
+        console.error('[Actual Spend] Error:', error);
       } finally {
         loadingState.spend = true;
         checkAllLoadingComplete();
