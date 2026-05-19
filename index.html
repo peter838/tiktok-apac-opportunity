@@ -1000,8 +1000,7 @@
         GLOBAL_REGIONAL_DATA.topRegionSpend = topEntry.actualSpend;
       }
 
-      // Update hero stats
-      updateHeroStatsFromRegionalData();
+      // Export regional data (will be updated with static values by overlay)
       exportRegionalData();
 
       const successCount = Array.from(regionResults.values()).filter(function(r) { return !r.error && r.actualSpend > 0; }).length;
@@ -1053,6 +1052,7 @@
       
       // Update hero stats with static totals
       updateHeroStatsFromRegionalData();
+      exportRegionalData();
       
       // Recalculate bars with static data
       recalculateAllBars();
