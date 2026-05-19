@@ -1146,10 +1146,7 @@
 
     // Fetch cost saving for TikTok-wide totals (no region parameter)
     async function fetchTotalCostSavingValue() {
-      // Disabled - using static data mode (API code preserved below but not called)
-      console.log('[Cost Saving] API disabled in static data mode');
-      return 0;
-      /* Original API code (preserved for future re-enable):
+      // Re-enabled: fetch cost saving from API
       try {
         const response = await fetch(`/api/cost-saving-proxy?entity_name=TikTok`);
         if (!response.ok) throw new Error(`Cost Saving API error: ${response.status}`);
@@ -1159,7 +1156,6 @@
         console.warn('[Cost Saving] Failed to fetch totals:', err.message);
         return 0;
       }
-      */
     }
 
     // Fallback supplier/entity data for ranking matrix
