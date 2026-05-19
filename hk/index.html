@@ -200,10 +200,14 @@
     }
 
     async function fetchCostSavingValue(regionCode) {
+      // Disabled - using static data mode (API code preserved below but not called)
+      return 0;
+      /* Original API code (preserved for future re-enable):
       const response = await fetch(`../api/cost-saving-proxy?region=${regionCode}&entity_name=TikTok`);
       if (!response.ok) throw new Error(`Cost Saving API error: ${response.status}`);
       const payload = await response.json();
       return payload.totalSaving ?? payload.totalSavingSgd ?? 0;
+      */
     }
 
     function updateCostSavingDisplay(totalSaving) {

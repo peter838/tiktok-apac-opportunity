@@ -745,16 +745,16 @@
 
     // Fallback data for regional cards (when API is unavailable)
     const REGIONAL_FALLBACK_DATA = {
-      'AU': { actualSpend: 2063903.42, poCount: 1797 },
-      'CN': { actualSpend: 3403215.70, poCount: 7673 },
-      'HK': { actualSpend: 10311.71, poCount: 42 },
-      'ID': { actualSpend: 1034537.78, poCount: 1419 },
-      'IN': { actualSpend: 245680.53, poCount: 640 },
-      'JP': { actualSpend: 1669889.26, poCount: 6581 },
-      'MY': { actualSpend: 835884.74, poCount: 842 },
-      'SG': { actualSpend: 1186680.38, poCount: 1244 },
-      'TH': { actualSpend: 126423.26, poCount: 346 },
-      'VN': { actualSpend: 54740.98, poCount: 110 }
+      'AU': { actualSpend: 34974.8, poCount: 42 },
+      'CN': { actualSpend: 6.72, poCount: 1 },
+      'HK': { actualSpend: 6926.65, poCount: 12 },
+      'ID': { actualSpend: 80210.01, poCount: 34 },
+      'IN': { actualSpend: 6517.44, poCount: 8 },
+      'JP': { actualSpend: 15822.97, poCount: 3 },
+      'MY': { actualSpend: 15109.39, poCount: 23 },
+      'SG': { actualSpend: 222074.33, poCount: 187 },
+      'TH': { actualSpend: 16351.27, poCount: 10 },
+      'VN': { actualSpend: 586611.05, poCount: 144 }
     };
 
     // Fetch and display regional data for country cards - INDEPENDENT PER-REGION UPDATES
@@ -1096,6 +1096,10 @@
 
     // Fetch cost saving for TikTok-wide totals (no region parameter)
     async function fetchTotalCostSavingValue() {
+      // Disabled - using static data mode (API code preserved below but not called)
+      console.log('[Cost Saving] API disabled in static data mode');
+      return 0;
+      /* Original API code (preserved for future re-enable):
       try {
         const response = await fetch(`/api/cost-saving-proxy?entity_name=TikTok`);
         if (!response.ok) throw new Error(`Cost Saving API error: ${response.status}`);
@@ -1105,6 +1109,7 @@
         console.warn('[Cost Saving] Failed to fetch totals:', err.message);
         return 0;
       }
+      */
     }
 
     // Fallback supplier/entity data for ranking matrix

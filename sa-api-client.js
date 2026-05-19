@@ -1,6 +1,24 @@
 // SA API Client for TikTok Singapore Opportunity Dashboard
 // Routes through /api/sa-proxy.js to avoid CORS issues
 
+// Static data mode - disable API calls, use provided data instead
+// Set to false to re-enable API calls in the future
+const USE_STATIC_DATA = true;
+
+// Static regional data provided by Tom (2026-05-19)
+const STATIC_REGIONAL_DATA = {
+  'AU': { totalSpend: 34974.8, totalOrders: 42 },
+  'CN': { totalSpend: 6.72, totalOrders: 1 },
+  'HK': { totalSpend: 6926.65, totalOrders: 12 },
+  'ID': { totalSpend: 80210.01, totalOrders: 34 },
+  'IN': { totalSpend: 6517.44, totalOrders: 8 },
+  'JP': { totalSpend: 15822.97, totalOrders: 3 },
+  'MY': { totalSpend: 15109.39, totalOrders: 23 },
+  'SG': { totalSpend: 222074.33, totalOrders: 187 },
+  'TH': { totalSpend: 16351.27, totalOrders: 10 },
+  'VN': { totalSpend: 586611.05, totalOrders: 144 },
+};
+
 class SAAPIClient {
   constructor() {
     // Use same-origin proxy to bypass CORS
@@ -10,6 +28,40 @@ class SAAPIClient {
   }
 
   async makeRequest(endpoint, payload, retryCount = 0) {
+    // Static data mode: bypass API calls and return provided data
+    if (USE_STATIC_DATA) {
+      const region = payload?.region || 'SG';
+      const staticData = STATIC_REGIONAL_DATA[region] || { totalSpend: 0, totalOrders: 0 };
+      
+      if (endpoint.includes('order-analysis')) {
+        const items = [];
+        for (let i = 0; i < staticData.totalOrders; i++) {
+          items.push({
+            category_name: 'TikTok Orders',
+            order_value: (staticData.totalSpend / Math.max(staticData.totalOrders, 1)).toFixed(2),
+            entity_name: `TikTok ${region}`,
+            entity_group: 'TikTok',
+          });
+        }
+        return { items: items, values: staticData.totalSpend };
+      }
+      
+      if (endpoint.includes('orders/values')) {
+        return { po_fulfilled: staticData.totalSpend };
+      }
+      
+      if (endpoint.includes('entity-margin')) {
+        return [{ count_order: staticData.totalOrders }];
+      }
+      
+      if (endpoint.includes('regions')) {
+        return { regions: Object.keys(STATIC_REGIONAL_DATA) };
+      }
+      
+      console.warn(`[SA API] Static mode: unknown endpoint ${endpoint}, returning empty`);
+      return this.getEmptyResponse(endpoint);
+    }
+    
     try {
       // Add timeout to the fetch itself (client-side)
       const controller = new AbortController();
@@ -78,6 +130,9 @@ class SAAPIClient {
   // Order Analysis by Category - Get category breakdown for Total Spend and Total Orders
   // This is the ONLY endpoint used for dashboard metrics (entity-margin and margin/region removed)
   async getOrderAnalysisByCategory(fromDate, toDate, region = 'SG', entityGroup = 'TikTok') {
+    if (USE_STATIC_DATA) {
+      return this.makeRequest('/v1.0/agent/analytics/entity/order-analysis', { region });
+    }
     const payload = {
       from_date: fromDate,
       to_date: toDate,
