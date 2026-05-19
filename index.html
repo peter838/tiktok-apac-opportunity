@@ -792,86 +792,28 @@
         }
       });
 
-      // Fire all region requests in parallel - each updates independently when ready
+      // Use static data directly (sa-proxy API temporarily disabled)
       const regionPromises = Object.keys(regionCards).map(async (region) => {
-        try {
-          console.log(`[Regional Data] Starting fetch for ${region}...`);
-          updateStatusBanner(`Loading ${region}... (${completedCount}/${totalRegions})`);
-
-          // Fetch both endpoints in parallel for this region
-          const [orderValuesResponse, orderAnalysisResponse] = await Promise.all([
-            client.makeRequest('/v1.0/agent/orders/values', {
-              page: 1,
-              per_page: 5,
-              q: '',
-              q_assignee: '',
-              from_date: fromDate + 'T03:13:30+00:00',
-              to_date: toDate + 'T03:13:30+00:00',
-              date_type: 'created_at',
-              filters: {
-                operation_status: ['APPROVED', 'PENDING DELIVERY', 'COMPLETED', 'COMPLETED TENTATIVE'],
-                entity_name: [294,293,289,287,259,252,250,249,246,244,241,240,234,231,227,226,223,221,220,217,216,214,212,206,205,201,200,192,185,180,179,175,173,144,127,119,114,113,112,108,103,100,95,92,91,90,69,66,63,62,56,55,54,51,50,48,47,46,44,41,37,30,18,17,9,7,5,4,2],
-                region: [region]
-              },
-              currency: 'SGD'
-            }),
-            client.makeRequest('/v1.0/agent/analytics/entity/order-analysis', {
-              from_date: fromDate,
-              to_date: toDate,
-              entity_group: 'TikTok',
-              region: region
-            })
-          ]);
-
-          // Process results
-          // Use orderValuesResponse for actualSpend (po_fulfilled is in SGD)
-          const actualSpend = parseFloat(orderValuesResponse?.po_fulfilled) || 0;
-          
-          // For PO count: use entity-margin tracking endpoint with region filter
-          let poCount = 0;
-          try {
-            const poCountResponse = await client.makeRequest('/v1.0/agent/analytics/tracking/entity-margin', {
-              from_date: fromDate,
-              to_date: toDate,
-              entity_group: 'TikTok',
-              region: region,
-              page: 1,
-              per_page: 200
-            });
-            const poRows = Array.isArray(poCountResponse) ? poCountResponse : (poCountResponse?.data || []);
-            poCount = poRows.reduce((sum, row) => sum + (parseInt(row.count_order) || 0), 0);
-          } catch (e) {
-            console.log(`[Regional Data] ${region}: PO count fetch failed, will use fallback`);
-          }
-          
-          const isDemoData = orderValuesResponse?._apiUnavailable || orderAnalysisResponse?._apiUnavailable;
-
-          const result = { region, actualSpend, poCount, isDemoData, error: false };
-          regionResults.set(region, result);
-
-          // IMMEDIATELY update this region's card (don't wait for others)
-          updateRegionCard(region, result);
-
-          // Recalculate all bars in case this region has new max
-          recalculateAllBars();
-
-          completedCount++;
-          loadingState.regions.set(region, true);
-          updateStatusBanner(`${region} loaded ✓ (${completedCount}/${totalRegions})`);
-
-          console.log(`[Regional Data] ${region}: Completed independently - Spend=S$ ${actualSpend.toLocaleString()}, POs=${poCount.toLocaleString()}`);
-
-        } catch (error) {
-          console.error(`[Regional Data] Failed to fetch for ${region}:`, error.message);
-          const result = { region, actualSpend: 0, poCount: 0, isDemoData: false, error: true };
-          regionResults.set(region, result);
-          completedCount++;
-          loadingState.regions.set(region, true);
-          updateStatusBanner(`${region} failed (${completedCount}/${totalRegions})`);
-        }
+        const staticData = STATIC_REGIONAL_DATA[region];
+        const actualSpend = staticData?.totalSpend || 0;
+        const poCount = staticData?.totalOrders || 0;
+        
+        const result = { region, actualSpend, poCount, isDemoData: false, error: false };
+        regionResults.set(region, result);
+        
+        // IMMEDIATELY update this region's card
+        updateRegionCard(region, result);
+        
+        // Recalculate all bars
+        recalculateAllBars();
+        
+        completedCount++;
+        loadingState.regions.set(region, true);
+        updateStatusBanner(`${region} loaded ✓ (${completedCount}/${totalRegions})`);
+        
+        console.log(`[Regional Data] ${region}: Static data - Spend=S$ ${actualSpend.toLocaleString()}, POs=${poCount.toLocaleString()}`);
       });
 
-      // Wait for all to complete (but each already updated independently)
       await Promise.all(regionPromises);
 
       // Apply fallback data for regions that failed or returned 0, and calculate totals
@@ -1136,98 +1078,26 @@
       
       updateStatusBanner('Loading supplier rankings...');
       
-      try {
-        // Fetch entity margin data for all TikTok entities
-        // Filter: Only include valid/non-cancelled/non-failed SPIDs per Eka April requirement
-        const response = await client.makeRequest('/v1.0/agent/analytics/tracking/entity-margin', {
-          from_date: fromDate,
-          to_date: toDate,
-          entity_group: 'TikTok',
-          page: 1,
-          per_page: 200,
-          // Only include approved/completed status - exclude cancelled/failed
-          filters: {
-            operation_status: ['APPROVED', 'PENDING DELIVERY', 'COMPLETED', 'COMPLETED TENTATIVE', 'FULFILLED', 'PAID', 'INVOICED']
-          }
-        });
-        
-        const rows = Array.isArray(response) ? response : (response?.data || []);
-        
-        // Process and aggregate data by entity
-        // Filter logic: Exclude cancelled or failed SPIDs from calculation
-        const entityMap = new Map();
-        let excludedCount = 0;
-        
-        rows.forEach(row => {
-          if (!row.entity_name) return;
-          
-          // Filter: Skip cancelled or failed SPIDs (Eka April requirement)
-          if (isExcludedStatus(row)) {
-            excludedCount++;
-            return;
-          }
-          
-          const key = row.entity_name;
-          const existing = entityMap.get(key) || {
-            entityName: row.entity_name,
-            entityCode: row.entity_code || '',
-            region: row.region || 'SG',
-            amountPayable: 0,
-            poCount: 0
-          };
-          
-          // Use po_fulfilled or amount_payable if available, otherwise use margin or order count as proxy
-          const rowAmount = parseFloat(row.po_fulfilled) || parseFloat(row.amount_payable) || parseFloat(row.margin) || 0;
-          existing.amountPayable += rowAmount;
-          existing.poCount += parseInt(row.count_order) || 0;
-          
-          entityMap.set(key, existing);
-        });
-        
-        console.log(`[Supplier Ranking] Filtered out ${excludedCount} cancelled/failed SPIDs from calculation`);
-        
-        // Convert to array and sort by amount payable (highest first)
-        let suppliers = Array.from(entityMap.values());
-        
-        // If no API data, use fallback
-        if (suppliers.length === 0 || rows.length === 0) {
-          console.log('[Supplier Ranking] Using fallback data (no API data available)');
-          suppliers = SUPPLIER_FALLBACK_DATA.map(s => ({
-            entityName: s.entityName,
-            entityCode: s.region,
-            region: s.region,
-            amountPayable: s.amountPayable,
-            poCount: s.poCount
-          }));
-        }
-        
-        // Sort by amount payable descending
-        suppliers.sort((a, b) => b.amountPayable - a.amountPayable);
-        
-        // Calculate total for percentage
-        const totalAmount = suppliers.reduce((sum, s) => sum + s.amountPayable, 0);
-        
-        // Render the table
-        renderSupplierRankingTable(suppliers, totalAmount);
-        
-        updateStatusBanner('Supplier rankings loaded ✓');
-        console.log('[Supplier Ranking] Loaded', suppliers.length, 'entities, total amount:', totalAmount);
-        
-      } catch (error) {
-        console.error('[Supplier Ranking] Failed to fetch:', error);
-        // Use fallback data on error
-        const suppliers = SUPPLIER_FALLBACK_DATA.map(s => ({
-          entityName: s.entityName,
-          entityCode: s.region,
-          region: s.region,
-          amountPayable: s.amountPayable,
-          poCount: s.poCount
-        }));
-        suppliers.sort((a, b) => b.amountPayable - a.amountPayable);
-        const totalAmount = suppliers.reduce((sum, s) => sum + s.amountPayable, 0);
-        renderSupplierRankingTable(suppliers, totalAmount);
-        updateStatusBanner('Supplier rankings (fallback) ✓');
-      }
+      // Use fallback data directly (sa-proxy API temporarily disabled)
+      const suppliers = SUPPLIER_FALLBACK_DATA.map(s => ({
+        entityName: s.entityName,
+        entityCode: s.region,
+        region: s.region,
+        amountPayable: s.amountPayable,
+        poCount: s.poCount
+      }));
+      
+      // Sort by amount payable descending
+      suppliers.sort((a, b) => b.amountPayable - a.amountPayable);
+      
+      // Calculate total for percentage
+      const totalAmount = suppliers.reduce((sum, s) => sum + s.amountPayable, 0);
+      
+      // Render the table
+      renderSupplierRankingTable(suppliers, totalAmount);
+      
+      updateStatusBanner('Supplier rankings loaded ✓');
+      console.log('[Supplier Ranking] Loaded', suppliers.length, 'entities from static data, total amount:', totalAmount);
     }
     
     // Render supplier ranking table
