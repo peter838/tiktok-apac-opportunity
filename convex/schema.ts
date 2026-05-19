@@ -23,6 +23,7 @@ const userRole = v.union(
   v.literal("admin"),
   v.literal("viewer"),
   v.literal("editor"),
+  v.literal("staff"),
 );
 
 const userStatus = v.union(
@@ -61,13 +62,16 @@ export default defineSchema({
     email: v.string(),
     name: v.string(),
     entity: v.optional(entity),
-    role: userRole,
-    status: userStatus,
+    role: v.optional(userRole),
+    status: v.optional(userStatus),
     countries: v.optional(v.array(countryCode)),
     createdAt: v.number(),
     updatedAt: v.number(),
     createdBy: v.optional(v.string()),
     lastLoginAt: v.optional(v.number()),
+    isActive: v.optional(v.boolean()),
+    passwordHash: v.optional(v.string()),
+    username: v.optional(v.string()),
   })
     .index("by_email", ["email"])
     .index("by_status", ["status"])

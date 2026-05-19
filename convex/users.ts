@@ -5,6 +5,7 @@ const userRole = v.union(
   v.literal("admin"),
   v.literal("viewer"),
   v.literal("editor"),
+  v.literal("staff"),
 );
 
 const userStatus = v.union(
