@@ -30,7 +30,7 @@ class SAAPIClient {
   async makeRequest(endpoint, payload, retryCount = 0) {
     // Static data mode: bypass API calls and return provided data
     if (USE_STATIC_DATA) {
-      const region = payload?.region || 'SG';
+      const region = payload?.region || payload?.filters?.region?.[0] || 'SG';
       const staticData = STATIC_REGIONAL_DATA[region] || { totalSpend: 0, totalOrders: 0 };
       
       if (endpoint.includes('order-analysis')) {
