@@ -1008,6 +1008,56 @@
       console.log('[Regional Data] All regions complete. ' + successCount + '/' + totalRegions + ' updated from API. Total: S$ ' + GLOBAL_REGIONAL_DATA.totalSpend.toLocaleString());
       updateStatusBanner(successCount + ' regions updated ✓');
       checkAllLoadingComplete();
+      
+      // Apply static data overlay to main figures
+      applyStaticOverlayToCards();
+    }
+
+    // Static data overlay for main figures (Total Spend, Total Orders, Actual Spend)
+    // Overrides API/fallback data with provided static values
+    function applyStaticOverlayToCards() {
+      console.log('[Static Overlay] Applying static data to regional cards');
+      
+      let totalStaticSpend = 0;
+      let totalStaticOrders = 0;
+      
+      Object.entries(STATIC_REGIONAL_DATA).forEach(([region, data]) => {
+        const card = regionCards[region];
+        if (!card) return;
+        
+        const spendEl = card.querySelector('[data-metric="spend"]');
+        const poEl = card.querySelector('[data-metric="po-count"]');
+        
+        if (spendEl) {
+          const formattedSpend = 'S$ ' + data.totalSpend.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          animateValueUpdate(spendEl, formattedSpend);
+        }
+        if (poEl) {
+          animateValueUpdate(poEl, data.totalOrders.toLocaleString());
+        }
+        
+        // Update global tracking with static data
+        GLOBAL_REGIONAL_DATA.regionResults.set(region, { 
+          region, 
+          actualSpend: data.totalSpend, 
+          poCount: data.totalOrders 
+        });
+        
+        totalStaticSpend += data.totalSpend;
+        totalStaticOrders += data.totalOrders;
+      });
+      
+      // Update global totals with static data
+      GLOBAL_REGIONAL_DATA.totalSpend = totalStaticSpend;
+      GLOBAL_REGIONAL_DATA.totalPOCount = totalStaticOrders;
+      
+      // Update hero stats with static totals
+      updateHeroStatsFromRegionalData();
+      
+      // Recalculate bars with static data
+      recalculateAllBars();
+      
+      console.log('[Static Overlay] Complete. Total Spend=S$ ' + totalStaticSpend.toLocaleString() + ', Total Orders=' + totalStaticOrders);
     }
 
     // Update hero stats with regional data

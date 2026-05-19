@@ -360,7 +360,30 @@
         if (totalSaving !== null && totalSaving !== undefined) updateCostSavingDisplay(totalSaving);
       });
       
-      initDashboard().catch(err => {
+    // Static data overlay for main figures
+    function applyStaticOverlayToHeroStats() {
+      const regionCode = 'CN';
+      const staticData = STATIC_REGIONAL_DATA[regionCode];
+      if (!staticData) {
+        console.warn('[Static Overlay] No static data for region ' + regionCode);
+        return;
+      }
+      console.log('[Static Overlay] Applying static data for ' + regionCode + ': Spend=S$ ' + staticData.totalSpend + ', Orders=' + staticData.totalOrders);
+      const spendEl = document.getElementById('stat-total-spend');
+      const ordersEl = document.getElementById('stat-total-orders');
+      if (spendEl) spendEl.textContent = formatSGD(staticData.totalSpend);
+      if (ordersEl) ordersEl.textContent = formatNumber(staticData.totalOrders);
+      const metricSpendEl = document.getElementById('metric-total-spend');
+      const metricOrdersEl = document.getElementById('metric-total-orders');
+      const ctaSpendEl = document.getElementById('cta-total-spend');
+      if (metricSpendEl) metricSpendEl.textContent = formatSGD(staticData.totalSpend);
+      if (metricOrdersEl) metricOrdersEl.textContent = formatNumber(staticData.totalOrders);
+      if (ctaSpendEl) ctaSpendEl.textContent = formatSGD(staticData.totalSpend);
+    }
+
+      initDashboard().then(() => {
+        applyStaticOverlayToHeroStats();
+      }).catch(err => {
         console.error('[CN Dashboard] initDashboard failed:', err);
       });
       initAll();

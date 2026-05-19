@@ -3,7 +3,7 @@
 
 // Static data mode - disable API calls, use provided data instead
 // Set to false to re-enable API calls in the future
-const USE_STATIC_DATA = true;
+const USE_STATIC_DATA = false;
 
 // Static regional data provided by Tom (2026-05-19)
 const STATIC_REGIONAL_DATA = {
