@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "TikTok APAC Opportunity Intelligence Dashboard",
   "dependencies": {
-    "convex": "^1.22.0"
+    "convex": "^1.39.1"
   },
   "scripts": {
     "update-convex-url": "node scripts/update-convex-url.js",
