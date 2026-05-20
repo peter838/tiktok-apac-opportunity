@@ -7,7 +7,8 @@ export const COUNTRY_NAMES = {
   "in": "India",
   "sg": "Singapore",
   "hk": "Hong Kong",
-  "th": "Thailand"
+  "th": "Thailand",
+  "vn": "Vietnam"
 } as const;
 
 export const TASK_SEEDS = {

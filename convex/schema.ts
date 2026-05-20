@@ -11,6 +11,7 @@ const countryCode = v.union(
   v.literal("sg"),
   v.literal("hk"),
   v.literal("th"),
+  v.literal("vn"),
 );
 
 const taskStatus = v.union(

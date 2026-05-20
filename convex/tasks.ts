@@ -12,6 +12,7 @@ const countryCode = v.union(
   v.literal("sg"),
   v.literal("hk"),
   v.literal("th"),
+  v.literal("vn"),
 );
 
 const taskStatus = v.union(
@@ -25,7 +26,7 @@ const entity = v.union(
   v.literal("tiktok"),
 );
 
-type CountryCode = "cn" | "jp" | "au" | "my" | "id" | "in" | "sg" | "hk" | "th";
+type CountryCode = "cn" | "jp" | "au" | "my" | "id" | "in" | "sg" | "hk" | "th" | "vn";
 type TaskStatus = "not started" | "in progress" | "completed";
 
 function normalizeStatus(status: string | undefined): TaskStatus {
