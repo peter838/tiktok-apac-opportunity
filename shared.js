@@ -502,6 +502,38 @@ function appendHistory(state, entry) {
   state.history = [...state.history, entry].slice(-100);
 }
 
+function getLocalStorageKey(countryCode) {
+  return `tiktok_tasks_${countryCode}`;
+}
+
+function saveTasksToLocalStorage(countryCode, state) {
+  try {
+    const data = {
+      nextId: state.nextId,
+      tasks: state.tasks,
+      timestamp: Date.now(),
+    };
+    localStorage.setItem(getLocalStorageKey(countryCode), JSON.stringify(data));
+  } catch (error) {
+    // localStorage might be full or unavailable
+  }
+}
+
+function loadTasksFromLocalStorage(countryCode) {
+  try {
+    const raw = localStorage.getItem(getLocalStorageKey(countryCode));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return {
+      nextId: Number(parsed?.nextId) || 1,
+      tasks: Array.isArray(parsed?.tasks) ? parsed.tasks : [],
+      timestamp: Number(parsed?.timestamp) || 0,
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
 function injectTaskTrackerSection(countryCode) {
   console.log('[TaskTracker] injectTaskTrackerSection called with:', countryCode);
   const countryName = TASK_TRACKER_COUNTRIES[countryCode];
@@ -517,6 +549,13 @@ function injectTaskTrackerSection(countryCode) {
   }
 
   const state = cloneTaskState(countryCode);
+
+  // Load from localStorage first (for immediate persistence across refreshes)
+  const localData = loadTasksFromLocalStorage(countryCode);
+  if (localData && localData.tasks.length > 0) {
+    state.nextId = localData.nextId;
+    state.tasks = localData.tasks.map(task => ({ ...task }));
+  }
   const existingAnnual = document.querySelector('section.annual-section');
   console.log('[TaskTracker] Found annual-section:', !!existingAnnual);
   const targetAnchor = existingAnnual || document.querySelector('section.story');
@@ -701,6 +740,8 @@ function injectTaskTrackerSection(countryCode) {
       { rowLabel, field: fieldNames[field] }
     ));
     renderRows();
+    // Save to localStorage for immediate persistence
+    saveTasksToLocalStorage(countryCode, state);
     try {
       await window.TikTokConvexClient?.mutation('tasks:updateTask', {
         countryCode,
@@ -755,6 +796,9 @@ function injectTaskTrackerSection(countryCode) {
       { rowLabel: `Task ${state.tasks.length}`, field: 'Row added' }
     ));
     
+    // Save to localStorage for immediate persistence
+    saveTasksToLocalStorage(countryCode, state);
+
     // Async sync to Convex (if available)
     void (async () => {
       try {
@@ -803,6 +847,7 @@ function injectTaskTrackerSection(countryCode) {
     restoreUndoSnapshot(state, previousState);
     appendHistory(state, makeHistoryEntry('Undid the last change and restored the previous saved state.', { rowLabel: 'Tracker', field: 'Undo' }));
     renderRows();
+    saveTasksToLocalStorage(countryCode, state);
     void syncSharedTaskState(countryCode, state);
     historyPanel.hidden = false;
     historyButton.setAttribute('aria-expanded', 'true');
@@ -812,13 +857,23 @@ function injectTaskTrackerSection(countryCode) {
   let hasLocalChanges = false;
   let lastSyncTime = 0;
 
-  // Initial load from remote
+  // Initial load from remote (merge with localStorage)
   loadSharedTaskState(countryCode).then((remoteState) => {
     // Only overwrite if we haven't made local changes yet
     if (!hasLocalChanges) {
-      state.nextId = remoteState.nextId;
-      state.tasks = remoteState.tasks;
-      renderRows();
+      const remoteTasks = Array.isArray(remoteState?.tasks) ? remoteState.tasks : [];
+      const localTasks = Array.isArray(state?.tasks) ? state.tasks : [];
+      // Prefer whichever has more tasks (localStorage or remote)
+      if (remoteTasks.length > localTasks.length) {
+        state.nextId = remoteState.nextId;
+        state.tasks = remoteTasks.map(task => ({ ...task }));
+        // Save merged state back to localStorage
+        saveTasksToLocalStorage(countryCode, state);
+        renderRows();
+      } else if (localTasks.length > 0) {
+        // Local has data, ensure it's saved to localStorage
+        saveTasksToLocalStorage(countryCode, state);
+      }
     }
   });
 
