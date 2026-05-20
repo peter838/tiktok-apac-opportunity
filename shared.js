@@ -731,6 +731,11 @@ function injectTaskTrackerSection(countryCode) {
     void recordAndRender(task, field, previous, next);
   });
 
+  // Update lastSyncTime on input events to prevent polling from wiping in-progress edits
+  tbodyEl.addEventListener('input', () => {
+    lastSyncTime = Date.now();
+  });
+
   addButton.addEventListener('click', () => {
     pushUndoSnapshot(state);
     hasLocalChanges = true;
@@ -823,9 +828,18 @@ function injectTaskTrackerSection(countryCode) {
       // Skip poll if user has made recent local changes (within last 5 seconds)
       if (hasLocalChanges && Date.now() - lastSyncTime < 5000) return;
 
+      // Skip poll if any task table field currently has focus (user is actively typing)
+      if (tbodyEl.contains(document.activeElement)) return;
+
       void loadSharedTaskState(countryCode).then((remoteState) => {
-        // Don't overwrite if user is actively editing
+        // Double-check after async load
         if (hasLocalChanges && Date.now() - lastSyncTime < 5000) return;
+        if (tbodyEl.contains(document.activeElement)) return;
+
+        // Only overwrite if remote state actually differs from local state
+        const remoteTasks = JSON.stringify((remoteState?.tasks || []).map(t => ({ date: t.date, description: t.description, owner: t.owner, deadline: t.deadline, status: t.status })).sort((a, b) => (a.description || '').localeCompare(b.description || '')));
+        const localTasks = JSON.stringify((state?.tasks || []).map(t => ({ date: t.date, description: t.description, owner: t.owner, deadline: t.deadline, status: t.status })).sort((a, b) => (a.description || '').localeCompare(b.description || '')));
+        if (remoteTasks === localTasks && (remoteState?.nextId || 1) === (state?.nextId || 1)) return;
 
         state.nextId = remoteState.nextId;
         state.tasks = remoteState.tasks;
