@@ -359,6 +359,7 @@
       
     // Static data overlay for main figures
     function applyStaticOverlayToHeroStats() {
+      if (!USE_STATIC_DATA) return;
       const regionCode = 'MY';
       const staticData = STATIC_REGIONAL_DATA[regionCode];
       if (!staticData) {
