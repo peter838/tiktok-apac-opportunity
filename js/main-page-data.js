@@ -63,9 +63,6 @@ class MainPageAPIClient {
   
   getEmptyResponse(endpoint) {
     // Return appropriate empty response structure based on endpoint
-    if (endpoint.includes('entity-margin')) {
-      return []; // Array response for entity margin
-    }
     if (endpoint.includes('order-analysis')) {
       return { items: [] }; // Object with items array
     }
@@ -83,17 +80,6 @@ class MainPageAPIClient {
       };
     }
     return {};
-  }
-
-  async getEntityMarginTracking(fromDate, toDate, region, page = 1, perPage = 100) {
-    const payload = {
-      from_date: fromDate,
-      to_date: toDate,
-      region: region,
-      page: page,
-      per_page: perPage,
-    };
-    return this.makeRequest('/v1.0/agent/analytics/tracking/entity-margin', payload);
   }
 
   async getOrderAnalysisByCategory(fromDate, toDate, region, entityGroup = 'TikTok') {
@@ -172,30 +158,21 @@ class MainPageDataFetcher {
     console.log('Fetching fresh data from API for all regions...');
     const regionData = {};
 
-    // Fetch all regions in parallel - both entity-margin and order-analysis
+    // Fetch all regions in parallel - order-analysis only (entity-margin removed)
     const promises = REGIONS.map(async (region) => {
       try {
-        // Fetch both endpoints in parallel for each region (same as China subpage)
-        const [entityMarginData, orderAnalysisData] = await Promise.all([
-          this.apiClient.getEntityMarginTracking(
-            this.fromDate,
-            this.toDate,
-            region,
-            1,
-            100
-          ),
-          this.apiClient.getOrderAnalysisByCategory(
-            this.fromDate,
-            this.toDate,
-            region,
-            'TikTok'
-          )
-        ]);
+        // Fetch order-analysis only (entity-margin endpoint removed)
+        const orderAnalysisData = await this.apiClient.getOrderAnalysisByCategory(
+          this.fromDate,
+          this.toDate,
+          region,
+          'TikTok'
+        );
         
         // Process order analysis to get real spend (same as China subpage)
         const orderSpend = this.processOrderAnalysisSpend(orderAnalysisData);
         
-        regionData[region] = this.processRegionData(entityMarginData, region, orderSpend);
+        regionData[region] = this.processRegionData([], region, orderSpend);
       } catch (error) {
         console.error(`Failed to fetch data for ${region}:`, error);
         regionData[region] = this.getEmptyRegionData(region);
@@ -224,7 +201,7 @@ class MainPageDataFetcher {
     const entities = Array.isArray(data) ? data : (data?.data || []);
 
     if (!entities.length) {
-      return this.getEmptyRegionData(region);
+      return this.getEmptyRegionData(region, realSpendFromOrders);
     }
 
     // Filter for TikTok entities and deduplicate
@@ -258,13 +235,13 @@ class MainPageDataFetcher {
     };
   }
 
-  getEmptyRegionData(region) {
+  getEmptyRegionData(region, spend = 0) {
     return {
       region: region,
       entityCount: 0,
       totalOrders: 0,
       totalMargin: 0,
-      totalSpend: 0,
+      totalSpend: spend,
       entities: [],
     };
   }

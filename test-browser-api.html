@@ -37,26 +37,8 @@
           .reduce((sum, row) => sum + (parseFloat(row.order_value) || 0), 0);
         results.textContent += 'Calculated CN spend: S$ ' + actualSpend.toLocaleString() + '\n\n';
         
-        // Test CN entity-margin
-        results.textContent += 'Testing CN entity-margin...\n';
-        const marginResponse = await client.makeRequest('/v1.0/agent/analytics/tracking/entity-margin', {
-          from_date: '2023-01-01',
-          to_date: '2025-12-31',
-          entity_group: 'TikTok',
-          region: 'CN'
-        });
-        
-        results.textContent += 'Response type: ' + typeof marginResponse + '\n';
-        results.textContent += 'Is array: ' + Array.isArray(marginResponse) + '\n';
-        results.textContent += 'Length: ' + (marginResponse?.length || marginResponse?.data?.length || 0) + '\n';
-        results.textContent += 'First item: ' + JSON.stringify(marginResponse?.[0] || marginResponse?.data?.[0]) + '\n\n';
-        
-        // Calculate PO count
-        const marginRows = Array.isArray(marginResponse) ? marginResponse : (marginResponse?.data || []);
-        const poCount = marginRows
-          .filter(row => row.entity_group === 'TikTok')
-          .reduce((sum, row) => sum + (parseInt(row.count_order) || 0), 0);
-        results.textContent += 'Calculated CN PO count: ' + poCount.toLocaleString() + '\n';
+        // entity-margin endpoint removed from dashboard
+        results.textContent += 'entity-margin endpoint removed\n';
         
       } catch (error) {
         results.textContent += '\nERROR: ' + error.message + '\n';

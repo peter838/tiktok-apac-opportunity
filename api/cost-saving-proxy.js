@@ -43,6 +43,9 @@ module.exports = async function handler(req, res) {
       return res.status(500).json({ error: "N8N_API_KEY not configured", _apiUnavailable: true });
     }
 
+    const startTimestamp = req.query?.start_timestamp || req.body?.start_timestamp || "2025-06-01";
+    const endTimestamp = req.query?.end_timestamp || req.body?.end_timestamp || "2025-12-31";
+
     const payload = {
       buyer_name: null,
       product_name: null,
@@ -50,8 +53,8 @@ module.exports = async function handler(req, res) {
       currency,
       marketplace_id: null,
       category: null,
-      timestamp_start: "2025-06-01",
-      timestamp_end: "2025-12-31",
+      timestamp_start: startTimestamp,
+      timestamp_end: endTimestamp,
     };
 
     // Only add region if specified (for TikTok-wide totals, omit region)

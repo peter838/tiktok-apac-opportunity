@@ -86,7 +86,7 @@
 <body>
   <div id="api-status" class="api-status loading" style="display: none;">Loading SA API data...</div>
 
-  <nav class="nav" id="nav"><div class="nav-inner"><a href="../index.html" class="nav-brand"><div class="nav-brand-icon">SS</div><span>SourceSage — Opportunity Intelligence</span></a><div style="display:flex;align-items:center;gap:16px;"><a href="../index.html" class="nav-back">← All countries</a><div class="nav-tag">TikTok Indonesia</div></div></div></nav>
+  <nav class="nav" id="nav"><div class="nav-inner"><a href="../index.html" class="nav-brand"><div class="nav-brand-icon">SS</div><span>SourceSage — Opportunity Intelligence</span></a><div style="display:flex;align-items:center;gap:16px;"><a href="../index.html" class="nav-back">← All countries</a><div class="nav-tag">TikTok Indonesia</div></div><div class="nav-calendar-filter"><label>From <input type="month" id="date-from" min="2023-01" max="2026-05" value="2025-06"></label><label>To <input type="month" id="date-to" min="2023-01" max="2026-05" value="2025-12"></label><button id="date-apply">Apply</button></div></div></nav>
 
   <section class="hero"><div class="hero-grid"></div><div class="container hero-content">
     <div class="hero-eyebrow reveal">Country Analysis — TikTok Supplier Connect Indonesia <span class="data-source-badge">Live SA API</span></div>
@@ -95,7 +95,7 @@
     <div class="hero-stats reveal reveal-delay-3" id="hero-stats">
       <div class="hero-stat"><div class="hero-stat-value" id="stat-total-orders">--</div><div class="hero-stat-label">Total Orders (POs)</div></div>
       <div class="hero-stat"><div class="hero-stat-value teal" id="stat-total-spend">--</div><div class="hero-stat-label">Total Spend</div></div>
-      <div class="hero-stat"><div class="hero-stat-value amber" id="stat-total-saving">--</div><div class="cost-saving-period-note">Jul–Dec 2025 only</div><div class="hero-stat-label">Total Cost Saving</div></div>
+      <div class="hero-stat"><div class="hero-stat-value amber" id="stat-total-saving">--</div><div class="cost-saving-period-note" id="stat-total-saving-pct">--</div><div class="hero-stat-label">Total Cost Saving</div></div>
       <div class="hero-stat"><div class="hero-stat-value red" id="stat-entity-count">--</div><div class="hero-stat-label">TikTok Entities</div></div>
     </div>
     <div class="disclaimer-banner reveal reveal-delay-4" style="max-width:900px;margin-top:24px;"><div class="icon">📡</div><p><strong>Live Data Source.</strong> Metrics are fetched in real-time from the SourceSage Aggregator API (SA API). Data reflects actual TikTok Indonesia procurement activity for 2025.</p></div>
@@ -134,7 +134,7 @@
     <p class="section-subtitle reveal reveal-delay-2">Aggregated metrics from SA API order-analysis endpoint.</p>
     <div class="insights-grid">
       <div class="insight-card observed reveal reveal-delay-1"><div class="insight-icon teal">📊</div><div class="insight-label">Total Spend</div><div class="insight-value teal" id="metric-total-spend">--</div><div class="insight-note">Sum of all TikTok entity spend in SGD</div></div>
-      <div class="insight-card potential reveal reveal-delay-2"><div class="insight-icon amber">💰</div><div class="insight-label">Total Cost Saving</div><div class="insight-value amber" id="metric-total-saving">--</div><div class="insight-note">Cost saving data covers Jul–Dec 2025 only</div></div>
+      <div class="insight-card potential reveal reveal-delay-2"><div class="insight-icon amber">💰</div><div class="insight-label">Total Cost Saving</div><div class="insight-value amber" id="metric-total-saving">--</div><div class="insight-note" id="metric-total-saving-pct">--</div></div>
       <div class="insight-card gap reveal reveal-delay-3"><div class="insight-icon red">🧾</div><div class="insight-label">Total Orders</div><div class="insight-value red" id="metric-total-orders">--</div><div class="insight-note">Purchase order count from entity data</div></div>
     </div>
   </div></section>
@@ -201,18 +201,30 @@
 
     async function fetchCostSavingValue(regionCode) {
       // Re-enabled: fetch cost saving from API
-      const response = await fetch(`../api/cost-saving-proxy?region=${regionCode}&entity_name=TikTok`);
+      const { startDate, endDate } = window.getDateRange ? window.getDateRange() : { startDate: '2025-06-01', endDate: '2025-12-31' };
+      const response = await fetch(`../api/cost-saving-proxy?region=${regionCode}&entity_name=TikTok&start_timestamp=${startDate}&end_timestamp=${endDate}`);
       if (!response.ok) throw new Error(`Cost Saving API error: ${response.status}`);
       const payload = await response.json();
-      return payload.totalSaving ?? payload.totalSavingSgd ?? 0;
+      return {
+        totalSaving: payload.totalSaving ?? payload.totalSavingSgd ?? 0,
+        totalSpend: payload.totalSpend ?? payload.totalSpendSgd ?? 0,
+        savingsRatePct: payload.savingsRatePct ?? 0,
+      };
     }
 
-    function updateCostSavingDisplay(totalSaving) {
+    function updateCostSavingDisplay(totalSaving, totalSpend, savingsRatePct) {
       const formatted = formatCostSavingSGD(totalSaving);
       const heroSavingEl = document.getElementById('stat-total-saving');
       const metricSavingEl = document.getElementById('metric-total-saving');
       if (heroSavingEl) heroSavingEl.textContent = formatted;
       if (metricSavingEl) metricSavingEl.textContent = formatted;
+      // Update percentage display
+      const pct = savingsRatePct || (totalSpend > 0 ? ((totalSaving / totalSpend) * 100) : 0);
+      const pctText = pct.toFixed(1) + '% of spend';
+      const heroPctEl = document.getElementById('stat-total-saving-pct');
+      const metricPctEl = document.getElementById('metric-total-saving-pct');
+      if (heroPctEl) heroPctEl.textContent = pctText;
+      if (metricPctEl) metricPctEl.textContent = pctText;
     }
 
     // Initialize dashboard
@@ -225,7 +237,8 @@
       try {
         console.log('[ID Dashboard] Starting data fetch...');
         const processor = new DashboardDataProcessor('ID');
-        const data = await processor.fetchAllMetrics('2025');
+        const { startDate, endDate } = window.getDateRange ? window.getDateRange() : { startDate: '2025-01-01', endDate: '2025-12-31' };
+        const data = await processor.fetchAllMetrics(startDate, endDate);
         console.log('[ID Dashboard] Data received:', data);
 
         // Skip UI updates if demo data is returned
@@ -353,8 +366,10 @@
       // Fire cost-saving API independently (not blocked by SA data)
       fetchCostSavingValue('ID').catch(err => {
         console.warn('[ID Dashboard] Cost Saving API failed:', err.message);
-      }).then(totalSaving => {
-        if (totalSaving !== null && totalSaving !== undefined) updateCostSavingDisplay(totalSaving);
+      }).then(result => {
+        if (result && result.totalSaving !== undefined) {
+          updateCostSavingDisplay(result.totalSaving, result.totalSpend, result.savingsRatePct);
+        }
       });
       
     // Static data overlay for main figures
@@ -387,4 +402,37 @@
       initAll();
     });
   </script>
+<script>
+    // Calendar filter
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const defaultFrom = '2025-06';
+      const defaultTo = '2025-12';
+      const from = params.get('from') || defaultFrom;
+      const to = params.get('to') || defaultTo;
+      const fromInput = document.getElementById('date-from');
+      const toInput = document.getElementById('date-to');
+      if (fromInput) fromInput.value = from;
+      if (toInput) toInput.value = to;
+      window.selectedDateRange = { from, to };
+      window.getDateRange = function() {
+        const f = window.selectedDateRange.from;
+        const t = window.selectedDateRange.to;
+        const startDate = f + '-01';
+        const endYear = parseInt(t.split('-')[0], 10);
+        const endMonth = parseInt(t.split('-')[1], 10);
+        const endDate = t + '-' + new Date(endYear, endMonth, 0).getDate();
+        return { startDate, endDate };
+      };
+      document.getElementById('date-apply')?.addEventListener('click', function() {
+        const newFrom = fromInput.value;
+        const newTo = toInput.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set('from', newFrom);
+        url.searchParams.set('to', newTo);
+        window.location.href = url.toString();
+      });
+    })();
+
+    </script>
 </body></html>

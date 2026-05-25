@@ -9,7 +9,7 @@
 </head>
 <body>
   <div id="api-status-banner" style="background:#0f172a;color:#22c55e;text-align:center;padding:8px;font-family:var(--font-mono);font-size:12px;">Loading live data from API...</div>
-  <nav class="nav" id="nav"><div class="nav-inner"><a href="index.html" class="nav-brand"><div class="nav-brand-icon">SS</div><span>SourceSage — Opportunity Intelligence</span></a><div class="nav-tag">TikTok Supplier Connect Programme</div></div></nav>
+  <nav class="nav" id="nav"><div class="nav-inner"><a href="index.html" class="nav-brand"><div class="nav-brand-icon">SS</div><span>SourceSage — Opportunity Intelligence</span></a><div class="nav-tag">TikTok Supplier Connect Programme</div><div class="nav-calendar-filter"><label>From <input type="month" id="date-from" min="2023-01" max="2026-05" value="2025-06"></label><label>To <input type="month" id="date-to" min="2023-01" max="2026-05" value="2025-12"></label><button id="date-apply">Apply</button></div></div></nav>
 
   <section class="hero"><div class="hero-grid"></div><div class="container hero-content">
     <div class="hero-eyebrow reveal">Regional Overview — TikTok Supplier Connect Programme</div>
@@ -19,7 +19,7 @@
       <div class="agg-stat"><div class="agg-stat-value" style="color:var(--amber)">10</div><div class="agg-stat-label">Markets analyzed</div></div>
       <div class="agg-stat"><div class="agg-stat-value" id="main-stat-spend" style="color:var(--teal)">--</div><div class="agg-stat-label">Actual Spend</div></div>
       <div class="agg-stat"><div class="agg-stat-value" id="main-stat-po" style="color:var(--amber)">--</div><div class="agg-stat-label">Total PO count</div></div>
-      <div class="agg-stat"><div class="agg-stat-value" id="main-stat-saving" style="color:var(--green-soft)">--</div><div class="cost-saving-period-note">Jul–Dec 2025 only</div><div class="agg-stat-label">Total Cost Saving</div></div>
+      <div class="agg-stat"><div class="agg-stat-value" id="main-stat-saving" style="color:var(--green-soft)">--</div><div class="cost-saving-period-note" id="main-saving-period">Jul–Dec 2025 only</div><div class="agg-stat-label">Total Cost Saving</div></div>
       <div class="agg-stat"><div class="agg-stat-value" id="main-stat-top-region" style="color:var(--purple)">CN</div><div class="agg-stat-label">Top region</div></div>
     </div>
     <div class="disclaimer-banner reveal reveal-delay-4" style="max-width:920px;margin-top:24px;"><div class="icon">⚠️</div><p><strong>Transparency first.</strong> Observed values from 2025 dashboard screenshots. Potential values are directional modeling. Multi-year trends are partial extraction from key visible categories. Site archetype model is an illustrative framework, not actual TikTok site procurement data.</p></div>
@@ -657,46 +657,10 @@
 
     // Fetch and display Total PO Count from SA API - INDEPENDENT UPDATE
     async function fetchTotalPOCount() {
-      const client = new SAAPIClient();
-      const fromDate = '2023-01-01';
-      const toDate = '2025-12-31';
-
-      // Update status immediately to show this specific request is loading
-      updateStatusBanner('Loading PO count...');
-
-      try {
-        // Fetch entity margin data for all regions to get TikTok data
-        const response = await client.makeRequest('/v1.0/agent/analytics/tracking/entity-margin', {
-          from_date: fromDate,
-          to_date: toDate,
-          entity_group: 'TikTok'
-        });
-
-        // Handle both array response and {data: array} response
-        const rows = Array.isArray(response) ? response : (response?.data || []);
-
-        // Filter rows where entity_group == "TikTok" and sum count_order
-        const totalPOCount = rows
-          .filter(row => row.entity_group === 'TikTok')
-          .reduce((sum, row) => sum + (parseInt(row.count_order) || 0), 0);
-
-        // Update the UI with the fetched total - IMMEDIATELY
-        const poCountElement = document.querySelector('.agg-stat:nth-child(3) .agg-stat-value');
-        if (poCountElement && totalPOCount > 0) {
-          animateValueUpdate(poCountElement, totalPOCount.toLocaleString());
-          console.log('[Total PO Count] Updated from API:', totalPOCount);
-          updateStatusBanner('PO count loaded ✓');
-        } else {
-          console.log('[Total PO Count] Using fallback value (API returned 0 or element not found)');
-        }
-      } catch (error) {
-        console.error('[Total PO Count] Failed to fetch from API:', error);
-        updateStatusBanner('PO count unavailable');
-        // Keep the static fallback value displayed
-      } finally {
-        loadingState.poCount = true;
-        checkAllLoadingComplete();
-      }
+      // entity-margin endpoint removed — PO count set to 0
+      loadingState.poCount = true;
+      checkAllLoadingComplete();
+      return 0;
     }
 
     // Fetch and display Actual Spend from SA API - INDEPENDENT UPDATE
@@ -714,8 +678,8 @@
           per_page: 5,
           q: '',
           q_assignee: '',
-          from_date: '2023-01-01T03:13:30+00:00',
-          to_date: '2025-12-31T03:13:30+00:00',
+          from_date: (window.getDateRange ? window.getDateRange().startDate : '2023-01-01') + 'T03:13:30+00:00',
+          to_date: (window.getDateRange ? window.getDateRange().endDate : '2025-12-31') + 'T03:13:30+00:00',
           date_type: 'created_at',
           filters: {
             operation_status: ['APPROVED', 'PENDING DELIVERY', 'COMPLETED', 'COMPLETED TENTATIVE'],
@@ -795,8 +759,7 @@
     // Fetch and display regional data for country cards - INDEPENDENT PER-REGION UPDATES
     async function fetchRegionalData() {
       const client = new SAAPIClient();
-      const fromDate = '2023-01-01';
-      const toDate = '2025-12-31';
+      const { startDate: fromDate, endDate: toDate } = window.getDateRange ? window.getDateRange() : { startDate: '2023-01-01', endDate: '2025-12-31' };
 
       // Map of region codes to their card elements
       const regionCards = {
@@ -930,22 +893,8 @@
           // Use orderValuesResponse for actualSpend (po_fulfilled is in SGD)
           const actualSpend = parseFloat(orderValuesResponse?.po_fulfilled) || 0;
           
-          // For PO count: use entity-margin tracking endpoint with region filter
+          // entity-margin endpoint removed — PO count set to 0
           let poCount = 0;
-          try {
-            const poCountResponse = await client.makeRequest('/v1.0/agent/analytics/tracking/entity-margin', {
-              from_date: fromDate,
-              to_date: toDate,
-              entity_group: 'TikTok',
-              region: region,
-              page: 1,
-              per_page: 200
-            });
-            const poRows = Array.isArray(poCountResponse) ? poCountResponse : (poCountResponse?.data || []);
-            poCount = poRows.reduce((sum, row) => sum + (parseInt(row.count_order) || 0), 0);
-          } catch (e) {
-            console.log(`[Regional Data] ${region}: PO count fetch failed, will use fallback`);
-          }
           
           const isDemoData = orderValuesResponse?._apiUnavailable || orderAnalysisResponse?._apiUnavailable;
 
@@ -1195,7 +1144,8 @@
     async function fetchTotalCostSavingValue() {
       // Re-enabled: fetch cost saving from API
       try {
-        const response = await fetch(`/api/cost-saving-proxy?entity_name=TikTok`);
+        const { startDate, endDate } = window.getDateRange ? window.getDateRange() : { startDate: '2025-06-01', endDate: '2025-12-31' };
+        const response = await fetch(`/api/cost-saving-proxy?entity_name=TikTok&start_timestamp=${startDate}&end_timestamp=${endDate}`);
         if (!response.ok) throw new Error(`Cost Saving API error: ${response.status}`);
         const payload = await response.json();
         return payload.totalSaving ?? payload.totalSavingSgd ?? 0;
@@ -1230,114 +1180,10 @@
     
     // Fetch and render supplier ranking matrix
     async function fetchSupplierRanking() {
-      const client = new SAAPIClient();
-      const fromDate = '2023-01-01';
-      const toDate = '2025-12-31';
+      // entity-margin endpoint removed — supplier rankings unavailable
       const tbody = document.getElementById('supplier-ranking-body');
-      
-      if (!tbody) return;
-      
-      updateStatusBanner('Loading supplier rankings...');
-      
-      try {
-        // Fetch entity margin data for all TikTok entities
-        // Filter: Only include valid/non-cancelled/non-failed SPIDs per Eka April requirement
-        const response = await client.makeRequest('/v1.0/agent/analytics/tracking/entity-margin', {
-          from_date: fromDate,
-          to_date: toDate,
-          entity_group: 'TikTok',
-          page: 1,
-          per_page: 200,
-          // Only include approved/completed status - exclude cancelled/failed
-          filters: {
-            operation_status: ['APPROVED', 'PENDING DELIVERY', 'COMPLETED', 'COMPLETED TENTATIVE', 'FULFILLED', 'PAID', 'INVOICED']
-          }
-        });
-        
-        const rows = Array.isArray(response) ? response : (response?.data || []);
-        
-        // Process and aggregate data by entity
-        // Filter logic: Exclude cancelled or failed SPIDs from calculation
-        const entityMap = new Map();
-        let excludedCount = 0;
-        
-        rows.forEach(row => {
-          if (!row.entity_name) return;
-          
-          // Filter: Skip cancelled or failed SPIDs (Eka April requirement)
-          if (isExcludedStatus(row)) {
-            excludedCount++;
-            return;
-          }
-          
-          const key = row.entity_name;
-          const existing = entityMap.get(key) || {
-            entityName: row.entity_name,
-            entityCode: row.entity_code || '',
-            region: row.region || 'SG',
-            amountPayable: 0,
-            poCount: 0
-          };
-          
-          // Use po_fulfilled or amount_payable if available, otherwise use margin or order count as proxy
-          const rowAmount = parseFloat(row.po_fulfilled) || parseFloat(row.amount_payable) || parseFloat(row.margin) || 0;
-          existing.amountPayable += rowAmount;
-          existing.poCount += parseInt(row.count_order) || 0;
-          
-          entityMap.set(key, existing);
-        });
-        
-        console.log(`[Supplier Ranking] Filtered out ${excludedCount} cancelled/failed SPIDs from calculation`);
-        
-        // Convert to array and sort by amount payable (highest first)
-        let suppliers = Array.from(entityMap.values());
-        
-        // If no API data, use fallback
-        if (suppliers.length === 0 || rows.length === 0) {
-          console.log('[Supplier Ranking] Using fallback data (no API data available)');
-          suppliers = SUPPLIER_FALLBACK_DATA.map(s => ({
-            entityName: s.entityName,
-            entityCode: s.region,
-            region: s.region,
-            amountPayable: s.amountPayable,
-            poCount: s.poCount
-          }));
-        }
-        
-        // Sort by amount payable descending
-        suppliers.sort((a, b) => b.amountPayable - a.amountPayable);
-        
-        // Calculate total for percentage
-        const totalAmount = suppliers.reduce((sum, s) => sum + s.amountPayable, 0);
-        
-        // Render the table
-        renderSupplierRankingTable(suppliers, totalAmount);
-        
-        updateStatusBanner('Supplier rankings loaded ✓');
-        console.log('[Supplier Ranking] Loaded', suppliers.length, 'entities from API, total amount:', totalAmount);
-      } catch (error) {
-        console.error('[Supplier Ranking] Failed to fetch from API:', error);
-        // Use fallback data on error
-        const suppliers = SUPPLIER_FALLBACK_DATA.map(s => ({
-          entityName: s.entityName,
-          entityCode: s.region,
-          region: s.region,
-          amountPayable: s.amountPayable,
-          poCount: s.poCount
-        }));
-        
-        // Sort by amount payable descending
-        suppliers.sort((a, b) => b.amountPayable - a.amountPayable);
-        
-        // Calculate total for percentage
-        const totalAmount = suppliers.reduce((sum, s) => sum + s.amountPayable, 0);
-        
-        // Render the table
-        renderSupplierRankingTable(suppliers, totalAmount);
-        
-        updateStatusBanner('Supplier rankings loaded (fallback) ✓');
-        console.log('[Supplier Ranking] Loaded', suppliers.length, 'entities from fallback, total amount:', totalAmount);
-      }
+      if (tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">Supplier ranking data unavailable (entity-margin endpoint removed)</td></tr>';
+      updateStatusBanner('Supplier rankings unavailable');
     }
     
     // Render supplier ranking table
@@ -1444,6 +1290,20 @@
           console.log('[Total Cost Saving] Updated:', totalSaving, 'Formatted:', formatted);
           updateStatusBanner('Cost savings loaded ✓');
         }
+        // Update period note
+        const periodNote = document.getElementById('main-saving-period');
+        if (periodNote && window.selectedDateRange) {
+          const from = window.selectedDateRange.from;
+          const to = window.selectedDateRange.to;
+          const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+          const fromMonth = months[parseInt(from.split('-')[1],10)-1];
+          const toMonth = months[parseInt(to.split('-')[1],10)-1];
+          const fromYear = from.split('-')[0];
+          const toYear = to.split('-')[0];
+          periodNote.textContent = fromYear === toYear
+            ? `${fromMonth}–${toMonth} ${toYear}`
+            : `${fromMonth} ${fromYear}–${toMonth} ${toYear}`;
+        }
         
         return totalSaving;
       } catch (error) {
@@ -1488,4 +1348,37 @@
       }
     }
   </script>
+<script>
+    // Calendar filter
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const defaultFrom = '2025-06';
+      const defaultTo = '2025-12';
+      const from = params.get('from') || defaultFrom;
+      const to = params.get('to') || defaultTo;
+      const fromInput = document.getElementById('date-from');
+      const toInput = document.getElementById('date-to');
+      if (fromInput) fromInput.value = from;
+      if (toInput) toInput.value = to;
+      window.selectedDateRange = { from, to };
+      window.getDateRange = function() {
+        const f = window.selectedDateRange.from;
+        const t = window.selectedDateRange.to;
+        const startDate = f + '-01';
+        const endYear = parseInt(t.split('-')[0], 10);
+        const endMonth = parseInt(t.split('-')[1], 10);
+        const endDate = t + '-' + new Date(endYear, endMonth, 0).getDate();
+        return { startDate, endDate };
+      };
+      document.getElementById('date-apply')?.addEventListener('click', function() {
+        const newFrom = fromInput.value;
+        const newTo = toInput.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set('from', newFrom);
+        url.searchParams.set('to', newTo);
+        window.location.href = url.toString();
+      });
+    })();
+
+    </script>
 </body></html>

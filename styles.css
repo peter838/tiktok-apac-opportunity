@@ -127,6 +127,33 @@ body {
   transition: color 0.2s;
 }
 .nav-back:hover { color: var(--amber); }
+.nav-calendar-filter {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 11px;
+}
+.nav-calendar-filter label {
+  display: flex; align-items: center; gap: 4px;
+  color: var(--text-muted);
+}
+.nav-calendar-filter input[type="month"] {
+  background: var(--bg-card); color: var(--text-primary);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 4px 8px; font-family: var(--font-mono); font-size: 11px;
+  cursor: pointer;
+}
+.nav-calendar-filter input[type="month"]:focus {
+  outline: none; border-color: var(--amber);
+}
+.nav-calendar-filter button {
+  background: var(--amber-soft); color: var(--amber);
+  border: 1px solid var(--amber-glow); border-radius: 6px;
+  padding: 4px 12px; font-family: var(--font-mono); font-size: 11px;
+  cursor: pointer; transition: all 0.2s;
+}
+.nav-calendar-filter button:hover {
+  background: var(--amber-glow); color: var(--amber-light);
+}
+
 
 /* === Hero === */
 .hero {

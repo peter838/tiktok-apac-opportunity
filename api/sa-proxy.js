@@ -176,14 +176,7 @@ function normalizeSADate(value) {
 function getEmptyResponse(endpoint) {
   if (!endpoint) return { _apiUnavailable: true, _isEmpty: true };
   
-  if (endpoint.includes('entity-margin')) {
-    return {
-      data: [],
-      _apiUnavailable: true,
-      _isEmpty: true,
-    };
-  }
-  
+
   if (endpoint.includes('order-analysis')) {
     return {
       items: [],

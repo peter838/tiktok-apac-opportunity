@@ -50,10 +50,7 @@ class SAAPIClient {
         return { po_fulfilled: staticData.totalSpend };
       }
       
-      if (endpoint.includes('entity-margin')) {
-        return [{ count_order: staticData.totalOrders }];
-      }
-      
+
       if (endpoint.includes('regions')) {
         return { regions: Object.keys(STATIC_REGIONAL_DATA) };
       }
@@ -128,7 +125,6 @@ class SAAPIClient {
   }
 
   // Order Analysis by Category - Get category breakdown for Total Spend and Total Orders
-  // This is the ONLY endpoint used for dashboard metrics (entity-margin and margin/region removed)
   async getOrderAnalysisByCategory(fromDate, toDate, region = 'SG', entityGroup = 'TikTok') {
     if (USE_STATIC_DATA) {
       return this.makeRequest('/v1.0/agent/analytics/entity/order-analysis', { region });
@@ -160,9 +156,8 @@ class DashboardDataProcessor {
     this.region = region;
   }
 
-  async fetchAllMetrics(year = '2025') {
-    const fromDate = `${year}-01-01`;
-    const toDate = `${year}-12-31`;
+  async fetchAllMetrics(fromDate = '2025-01-01', toDate = '2025-12-31') {
+    // fromDate and toDate are full ISO dates (YYYY-MM-DD)
 
     // Only fetch order-analysis endpoint for Total Spend and Total Orders
     const orderAnalysisResult = await this.apiClient.getOrderAnalysisByCategory(fromDate, toDate, this.region, 'TikTok');
@@ -196,8 +191,6 @@ class DashboardDataProcessor {
     };
   }
 
-  // NOTE: processEntityMargin removed - entity-margin endpoint no longer used
-  // Total Spend and Total Orders now come from order-analysis endpoint only
 
   processOrderAnalysis(data, entityGroupFilter = 'TikTok') {
     // Handle {items: array, values: number} response format
