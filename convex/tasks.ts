@@ -23,7 +23,13 @@ const taskStatus = v.union(
 
 const entity = v.union(
   v.literal("dhl"),
+  v.literal("jll"),
   v.literal("tiktok"),
+  v.literal("cushman-wakefield"),
+  v.literal("smrt"),
+  v.literal("certis"),
+  v.literal("toll-group"),
+  v.literal("prudential"),
 );
 
 type CountryCode = "cn" | "jp" | "au" | "my" | "id" | "in" | "sg" | "hk" | "th" | "vn";

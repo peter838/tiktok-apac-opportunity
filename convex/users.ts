@@ -29,7 +29,13 @@ const countryCode = v.union(
 
 const entity = v.union(
   v.literal("dhl"),
+  v.literal("jll"),
   v.literal("tiktok"),
+  v.literal("cushman-wakefield"),
+  v.literal("smrt"),
+  v.literal("certis"),
+  v.literal("toll-group"),
+  v.literal("prudential"),
 );
 
 // Helper: resolve entity for backward compatibility (old data = dhl)
