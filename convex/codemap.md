@@ -69,7 +69,7 @@ updatedAt: number           // epoch ms
 **Notes:**
 - `entityTasks` is the country-agnostic sibling of `tasks`. Same field set, same status FSM, but bucketed only by `entity` — no `countryCode`. Use this for cross-country entity-wide task views (e.g., "all open TikTok tasks regardless of region").
 - ID uniqueness is per-`entity` (composite of `entity` + `id`). The same numeric `id` can exist in two entities (e.g. `tiktok:1` and `dhl:1` are distinct rows). The `by_entity_id` index enforces this.
-- The schema is intentionally parallel to `tasks` (same field types, same status union) so the same React component shape can be used to render both. Migration from `tasks` → `entityTasks` would be a per-row copy if ever needed (no current migration function — both tables coexist).
+- The schema is intentionally parallel to `tasks` (same field types, same status union) so the same React component shape can be used to render both. One-shot backfill from `tasks` is available via `entityTasks.migrateTasksToEntityTasks` (idempotent, preserves original timestamps, does NOT delete from `tasks` — both tables coexist).
 - The 8-value `entity` union is the same one used in `tasks` and `users`. Adding a 9th entity means updating the union in `schema.ts`, `tasks.ts`, `users.ts`, and `entityTasks.ts` (4 files now).
 
 #### `users`
@@ -175,11 +175,12 @@ All enforced via `convex/values`:
 | `create` | Insert new task into one entity with auto-incrementing id | `{ entity?, date, description, owner, deadline, status, id? }` | If `id` omitted, auto-increment from latest in `(entity)` via `by_entity_id` desc query. Sets `entity = resolveEntity(entity)`, `createdAt = now`, `updatedAt = now`. |
 | `update` | Partial update of mutable fields | `{ id, entity?, date?, description?, owner?, deadline?, status? }` | Patches `updatedAt = now`. Finds task by `(entity, id)` composite. Throws if not found. |
 | `deleteTask` | Hard-delete task record | `{ id, entity? }` | Physical delete via `db.delete()`. Returns `{ok, deleted}` boolean flag. |
+| `migrateTasksToEntityTasks` | One-shot backfill from `tasks` table, bucketing by `entity` (default `"dhl"`) | `{ dryRun? }` | Iterates all `tasks` rows, looks up `(entity, id)` in `entityTasks` via `by_entity_id`, skips if present (idempotent). Inserts with `entity = resolveEntity(t.entity)` and preserves original `createdAt` + `updatedAt`. Does NOT delete from `tasks` — both tables coexist. Returns `{ ok, dryRun, tasksScanned, inserted, skipped, skippedExamples }`. |
 
 **Design notes:**
 - All mutations are entity-scoped via the `entity` arg (or default `"dhl"`). No global task operations exist.
 - `create` uses `order("desc").first()` against `by_entity_id` to compute next sequential ID per entity. This works because the index is on `[entity, id]` and Convex orders by the second indexed field within the first.
-- `entityTasks` is a brand-new table (added 2026-06-13) with no seed data — start empty and grow it organically as the entity-wide dashboard rolls out. No `seedEntityTasks` mutation is defined; if a seed is ever needed, mirror the pattern of `seedTasks` in `tasks.ts`.
+- `entityTasks` is a brand-new table (added 2026-06-13). Initial population came from `migrateTasksToEntityTasks` on the same day. No `seedEntityTasks` mutation is defined; if a default cross-country task list is ever needed, mirror the pattern of `seedTasks` in `tasks.ts`.
 - No `migrate*` function: there is no legacy data to backfill.
 
 ### users.ts — User Management Module
@@ -252,7 +253,7 @@ TASK_SEEDS = {
 convex/
 ├─ schema.ts           # Table definitions + indexes + value constraints
 ├─ tasks.ts            # Task CRUD + country queries + seed + migrate (7 exports)
-├─ entityTasks.ts      # Entity-wide task CRUD (no countryCode) (4 exports)
+├─ entityTasks.ts      # Entity-wide task CRUD (no countryCode) (5 exports)
 ├─ users.ts            # User CRUD + stats + login tracking + admin seed (10 exports)
 ├─ seedData.ts         # Static data constants (countries, initial tasks)
 ├─ tsconfig.json       # TypeScript configuration for Convex server
@@ -408,8 +409,8 @@ Choosing one shared Convex deployment for all 8 entities (instead of 8 deploymen
 | `isActive` and `passwordHash` on users | Unused in code | Schema fields are present but no function reads or writes them. Either wire them up or remove until needed. |
 | `seedTasks` has no production re-seed guard | Dev only | Calling `seedTasks` on a populated entity is idempotent at the row level, but it does not re-sync if a seed definition changes. Plan accordingly. |
 | Entity union duplication | Maintenance hazard | Same 8-value list lives in `schema.ts`, `tasks.ts`, `users.ts`, `entityTasks.ts`. A new entity requires editing all four files. Consider extracting to a shared `convex/entities.ts` constant if it grows. |
-| `entityTasks` seed data | None defined | `tasks` has `seedTasks` + `TASK_SEEDS`; `entityTasks` starts empty. If a default cross-country task list is ever needed, mirror the `seedTasks` pattern. |
-| `tasks` → `entityTasks` migration | Not implemented | The two tables have parallel schemas but no automatic backfill. The two open questions Tom raised (data migration + seed re-bucketing) are still open as of 2026-06-13 — proceeding with empty `entityTasks` for now. |
+| `tasks` → `entityTasks` migration | Implemented | `migrateTasksToEntityTasks` mutation added 2026-06-13, runs as a one-shot backfill. Idempotent. Original `createdAt` + `updatedAt` preserved. The two tables continue to coexist — no row deletion from `tasks`. Re-run safely any time. |
+| `entityTasks` seed data | None defined | `tasks` has `seedTasks` + `TASK_SEEDS`; `entityTasks` starts empty after migration. If a default cross-country task list is ever needed, mirror the `seedTasks` pattern. |
 
 ---
 

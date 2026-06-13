@@ -178,3 +178,65 @@ export const deleteTask = mutation({
     return { ok: true, deleted: true };
   },
 });
+
+// One-shot migration: copy all rows from `tasks` into `entityTasks`,
+// bucketing by `entity` (defaulting to "dhl" for legacy rows with no entity).
+// Idempotent: skips (entity, id) pairs that already exist in entityTasks.
+// Does NOT delete from `tasks` — the two tables coexist post-migration.
+export const migrateTasksToEntityTasks = mutation({
+  args: {
+    dryRun: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    const tasks = await ctx.db.query("tasks").collect();
+    const dryRun = args.dryRun ?? false;
+    let inserted = 0;
+    let skipped = 0;
+    const skippedExamples: Array<{ id: number; countryCode: string; entity: string }> = [];
+
+    for (const t of tasks) {
+      const target = resolveEntity(t.entity);
+
+      // Check for existing (entity, id) in entityTasks to keep this idempotent.
+      const existing = await ctx.db
+        .query("entityTasks")
+        .withIndex("by_entity_id", (q) => q.eq("entity", target).eq("id", t.id))
+        .first();
+
+      if (existing) {
+        skipped += 1;
+        if (skippedExamples.length < 5) {
+          skippedExamples.push({ id: t.id, countryCode: t.countryCode, entity: target });
+        }
+        continue;
+      }
+
+      if (dryRun) {
+        inserted += 1;
+        continue;
+      }
+
+      await ctx.db.insert("entityTasks", {
+        id: t.id,
+        entity: target,
+        date: t.date,
+        description: t.description,
+        owner: t.owner,
+        deadline: t.deadline,
+        status: t.status as TaskStatus,
+        createdAt: t.createdAt,
+        updatedAt: t.updatedAt,
+      });
+      inserted += 1;
+    }
+
+    return {
+      ok: true,
+      dryRun,
+      tasksScanned: tasks.length,
+      inserted,
+      skipped,
+      skippedExamples,
+    };
+  },
+});
