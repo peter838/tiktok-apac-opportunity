@@ -60,6 +60,20 @@ export default defineSchema({
     .index("by_country", ["countryCode"])
     .index("by_country_and_id", ["countryCode", "id"]),
 
+  entityTasks: defineTable({
+    id: v.number(),
+    entity: v.optional(entity),
+    date: v.string(),
+    description: v.string(),
+    owner: v.string(),
+    deadline: v.string(),
+    status: taskStatus,
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_entity", ["entity"])
+    .index("by_entity_id", ["entity", "id"]),
+
   countries: defineTable({
     code: countryCode,
     name: v.string(),

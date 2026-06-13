@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as entityTasks from "../entityTasks.js";
 import type * as seedData from "../seedData.js";
 import type * as tasks from "../tasks.js";
 import type * as users from "../users.js";
@@ -19,6 +20,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  entityTasks: typeof entityTasks;
   seedData: typeof seedData;
   tasks: typeof tasks;
   users: typeof users;
